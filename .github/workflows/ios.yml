@@ -10,6 +10,8 @@ jobs:
   build-test-screenshot:
     runs-on: macos-latest
     timeout-minutes: 30
+    permissions:
+      contents: write
     env:
       BUNDLE_ID: com.example.torpido
     steps:
@@ -70,6 +72,18 @@ jobs:
           shot phone-settings -TorpidoTab settings
           xcrun simctl ui "$UDID" content_size accessibility-extra-large
           shot phone-live-large-type -TorpidoStage live
+
+      - name: Publish screenshots to the review-shots branch
+        if: github.event_name == 'push'
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cd .impeccable/review
+          git init -q
+          git checkout -q -b review-shots
+          git add ./*.png
+          git -c user.name=ci -c user.email=ci@users.noreply.github.com commit -qm "screenshots for ${GITHUB_SHA::7}"
+          git push -qf "https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git" review-shots
 
       - name: Upload screenshots and log
         if: always()
