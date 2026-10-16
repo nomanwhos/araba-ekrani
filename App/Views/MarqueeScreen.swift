@@ -1,21 +1,31 @@
 import SwiftUI
 
-/// The drive-in screen with its bulb row. The bulbs carry the state:
-/// off while waiting for the car, steady when ready, chasing while live.
+/// The drive-in marquee: the name, its bulb row, and the screen. The bulbs
+/// carry the state: unlit while waiting for the car, steady when ready,
+/// chasing while live.
 struct MarqueeScreen: View {
     enum Stage {
         case waitingForCar, ready, live
     }
 
     let stage: Stage
-    let framesPerSecond: Int
 
     var body: some View {
-        VStack(spacing: 12) {
-            BulbRow(stage: stage)
-            screen
+        VStack(spacing: 14) {
+            Text("TORPİDO")
+                .font(.largeTitle.width(.expanded).weight(.black))
+                .foregroundStyle(Color.accentColor)
+                .lineLimit(1)
+                .minimumScaleFactor(0.6)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .accessibilityLabel("Torpido")
+                .accessibilityAddTraits(.isHeader)
+            VStack(spacing: 12) {
+                BulbRow(stage: stage)
+                screen
+            }
+            .accessibilityElement(children: .combine)
         }
-        .accessibilityElement(children: .combine)
     }
 
     /// 16:9 at default text sizes; grows taller instead of truncating at large ones.
@@ -63,7 +73,7 @@ struct MarqueeScreen: View {
         switch stage {
         case .waitingForCar: "Arabaya bağlı değil"
         case .ready: "Perde hazır"
-        case .live: "Yayında · \(framesPerSecond) kare/sn"
+        case .live: "Yayında"
         }
     }
 
@@ -93,25 +103,43 @@ private struct BulbRow: View {
         if stage == .live && !reduceMotion {
             TimelineView(.periodic(from: .now, by: Self.chaseStep)) { context in
                 let tick = Int(context.date.timeIntervalSinceReferenceDate / Self.chaseStep)
-                bulbs { index in (tick + index) % 3 == 0 ? 1 : 0.35 }
+                bulbs { index in (tick + index) % 3 == 0 }
             }
         } else {
-            bulbs { _ in stage == .waitingForCar ? 0.22 : 1 }
+            bulbs { _ in stage != .waitingForCar }
         }
     }
 
-    private func bulbs(brightness: @escaping (Int) -> Double) -> some View {
+    private func bulbs(isLit: @escaping (Int) -> Bool) -> some View {
         HStack {
             ForEach(0..<Self.count, id: \.self) { index in
-                let level = brightness(index)
-                Circle()
-                    .fill(Color.accentColor.opacity(level))
-                    .frame(width: 7, height: 7)
-                    .shadow(color: Color.accentColor.opacity(level > 0.5 ? 0.9 : 0), radius: 4, x: 0, y: 1)
+                Bulb(isLit: isLit(index))
                 if index < Self.count - 1 { Spacer(minLength: 0) }
             }
         }
-        .padding(.horizontal, 6)
         .accessibilityHidden(true)
+    }
+}
+
+/// One marquee bulb: amber glass with a filament highlight when lit,
+/// dark glass with a faint rim when not.
+private struct Bulb: View {
+    let isLit: Bool
+    @ScaledMetric(relativeTo: .body) private var size: CGFloat = 12
+
+    var body: some View {
+        Circle()
+            .fill(isLit ? Color.accentColor : Color.accentColor.opacity(0.14))
+            .overlay {
+                Circle().strokeBorder(Color.accentColor.opacity(isLit ? 0 : 0.35), lineWidth: 1)
+            }
+            .overlay(alignment: .topLeading) {
+                Circle()
+                    .fill(Color.white.opacity(isLit ? 0.85 : 0))
+                    .frame(width: size * 0.32, height: size * 0.32)
+                    .offset(x: size * 0.2, y: size * 0.16)
+            }
+            .frame(width: size, height: size)
+            .shadow(color: Color.accentColor.opacity(isLit ? 0.85 : 0), radius: size * 0.6, x: 0, y: 1)
     }
 }

@@ -22,9 +22,9 @@ struct SettingsView: View {
                     }
 
                     Section("Bilinmesi gerekenler") {
-                        Label("Ses, telefondaki uygulamadan arabaya her zamanki gibi gelir.", systemImage: "speaker.wave.2")
-                        Label("Araba ekranında kısa bir gecikme olabilir.", systemImage: "timer")
-                        Label("Araba ekranına dokunmak telefonu kontrol etmez.", systemImage: "hand.tap")
+                        Note(text: "Ses, telefondaki uygulamadan arabaya her zamanki gibi gelir.", symbol: "speaker.wave.2")
+                        Note(text: "Araba ekranında kısa bir gecikme olabilir.", symbol: "timer")
+                        Note(text: "Araba ekranına dokunmak telefonu kontrol etmez.", symbol: "hand.tap")
                     }
 
                     Section("Hakkında") {
@@ -50,7 +50,21 @@ private struct Step: View {
             Text(text)
         } icon: {
             Image(systemName: "\(number).circle.fill")
-                .foregroundStyle(Color.accentColor)
+                .foregroundStyle(.secondary)
+        }
+    }
+}
+
+private struct Note: View {
+    let text: String
+    let symbol: String
+
+    var body: some View {
+        Label {
+            Text(text)
+        } icon: {
+            Image(systemName: symbol)
+                .foregroundStyle(.secondary)
         }
     }
 }
