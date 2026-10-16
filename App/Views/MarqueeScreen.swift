@@ -150,6 +150,17 @@ private struct Bulb: View {
                     .offset(x: size * 0.2, y: size * 0.16)
             }
             .frame(width: size, height: size)
-            .shadow(color: Color.accentColor.opacity(isLit ? 0.85 : 0), radius: Self.glowRadius(for: size), x: 0, y: 1)
+            // A gradient that reaches zero inside its own circle: unlike .shadow it
+            // leaves no layer edge for the list row to show as a band.
+            .background {
+                Circle()
+                    .fill(RadialGradient(
+                        colors: [Color.accentColor.opacity(isLit ? 0.55 : 0), Color.accentColor.opacity(0)],
+                        center: .center,
+                        startRadius: size * 0.3,
+                        endRadius: size / 2 + Self.glowRadius(for: size)
+                    ))
+                    .frame(width: size + Self.glowRadius(for: size) * 2, height: size + Self.glowRadius(for: size) * 2)
+            }
     }
 }
