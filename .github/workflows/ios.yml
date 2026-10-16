@@ -43,7 +43,14 @@ jobs:
             -project Torpido.xcodeproj -scheme Torpido \
             -destination "id=$UDID" -derivedDataPath build \
             CODE_SIGN_IDENTITY=- CODE_SIGNING_REQUIRED=NO DEVELOPMENT_TEAM= \
-            | tee xcodebuild.log | grep -E "error:|warning:|Test Case|\*\* (TEST|BUILD)"
+            > xcodebuild.log 2>&1 || {
+              # Surface compiler and test failures as annotations (readable without signing in).
+              grep -E "error:|failed \(|\*\* (TEST|BUILD) FAILED" xcodebuild.log | sort -u | head -40 \
+                | sed -E "s#^$GITHUB_WORKSPACE/##" \
+                | sed -E 's#^([^:]+\.swift):([0-9]+):[0-9]+: error: (.*)$#::error file=\1,line=\2::\3#; t; s#^(.*)$#::error::\1#'
+              exit 1
+            }
+            grep -E "Test Case .* (passed|failed)|\*\* TEST" xcodebuild.log
 
       - name: Capture screenshots
         run: |
