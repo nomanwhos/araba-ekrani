@@ -3,12 +3,13 @@
  bulb row shows the whole state at a glance (bulbs off, steady, chasing);
  it refuses the settings-list cast page.
  OWN-WORLD: night-sky navy ground ("Night", rows "NightRaised"), marquee amber
- tint ("AccentColor") on the bulbs and the single primary button, the perde lit
- projector-white only while live. SF Pro throughout; SF Expanded Black for the
- marquee name only. System tab bar, grouped lists, SF Symbols.
+ ("AccentColor") on the marquee name, the bulbs, the single primary button and
+ on-state status only; the perde lit projector-white only while live. SF Pro
+ throughout; SF Expanded Black for the marquee name only. System tab bar,
+ grouped lists, SF Symbols.
  STORY: the passenger sees whether the car is connected, taps one button,
  chooses Start Broadcast, then switches to the app they want to watch.
- FIRST VIEWPORT: large title Torpido; bulb row and perde at full width; the
+ FIRST VIEWPORT: "TORPİDO" marquee name; bulb row and perde at full width; the
  full-width amber "Yansıtmayı Başlat" right under the perde; status rows below.
  FORM: drive-in cinema, owner's choice (my list #1 over the assigned #7), seed 9b151894.
  FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance

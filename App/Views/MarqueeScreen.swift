@@ -20,7 +20,8 @@ struct MarqueeScreen: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .accessibilityLabel("Torpido")
                 .accessibilityAddTraits(.isHeader)
-            VStack(spacing: 12) {
+            // BulbRow pads itself by its glow radius, which stands in for this gap.
+            VStack(spacing: 4) {
                 BulbRow(stage: stage)
                 screen
             }
@@ -98,6 +99,7 @@ private struct BulbRow: View {
 
     let stage: MarqueeScreen.Stage
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @ScaledMetric(relativeTo: .body) private var bulbSize: CGFloat = Bulb.defaultSize
 
     var body: some View {
         if stage == .live && !reduceMotion {
@@ -117,6 +119,8 @@ private struct BulbRow: View {
                 if index < Self.count - 1 { Spacer(minLength: 0) }
             }
         }
+        // Room for the glow so the list row never clips it into a hard band.
+        .padding(Bulb.glowRadius(for: bulbSize) + 1)
         .accessibilityHidden(true)
     }
 }
@@ -124,8 +128,14 @@ private struct BulbRow: View {
 /// One marquee bulb: amber glass with a filament highlight when lit,
 /// dark glass with a faint rim when not.
 private struct Bulb: View {
+    static let defaultSize: CGFloat = 12
+
+    static func glowRadius(for size: CGFloat) -> CGFloat {
+        size * 0.6
+    }
+
     let isLit: Bool
-    @ScaledMetric(relativeTo: .body) private var size: CGFloat = 12
+    @ScaledMetric(relativeTo: .body) private var size: CGFloat = Bulb.defaultSize
 
     var body: some View {
         Circle()
@@ -140,6 +150,6 @@ private struct Bulb: View {
                     .offset(x: size * 0.2, y: size * 0.16)
             }
             .frame(width: size, height: size)
-            .shadow(color: Color.accentColor.opacity(isLit ? 0.85 : 0), radius: size * 0.6, x: 0, y: 1)
+            .shadow(color: Color.accentColor.opacity(isLit ? 0.85 : 0), radius: Self.glowRadius(for: size), x: 0, y: 1)
     }
 }
