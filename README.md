@@ -23,7 +23,7 @@ iPhone ekranı ──► Yayın eklentisi (ReplayKit) ──► 127.0.0.1:48621 
 ## Durum
 
 - [x] Kod yazıldı: yayın eklentisi, CarPlay ekranı, telefon arayüzü, testler
-- [ ] Bulutta derleme ve testler geçti (GitHub'a yüklendikten sonra)
+- [x] Bulutta derleme ve testler geçti
 - [ ] Apple Developer hesabı (yıllık 99$, sahibinin kararı)
 - [ ] CarPlay navigation izni Apple'dan alındı
 - [ ] Telefona kuruldu ve arabada denendi

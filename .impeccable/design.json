@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-16T00:00:00Z",
+  "title": "Design System: Torpido",
+  "extensions": {
+    "colorMeta": {
+      "marquee-amber": { "role": "primary", "displayName": "Marquee Amber", "canonical": "#FFB13B (sRGB asset AccentColor)", "tonalRamp": ["#2E1A00", "#4F2F00", "#734700", "#9A6100", "#C27D10", "#E8992A", "#FFC06A", "#FFE3B8"] },
+      "night": { "role": "neutral", "displayName": "Night", "canonical": "#0A1324 (sRGB asset Night)", "tonalRamp": ["#0A1324", "#16223A", "#253350", "#374767", "#4D5D80", "#6B7A9B", "#97A3BD", "#D2D8E4"] },
+      "night-raised": { "role": "neutral", "displayName": "Night Raised", "canonical": "#16223A (sRGB asset NightRaised)", "tonalRamp": ["#0A1324", "#16223A", "#253350", "#374767", "#4D5D80", "#6B7A9B", "#97A3BD", "#D2D8E4"] },
+      "perde-dark": { "role": "neutral", "displayName": "Perde Dark", "canonical": "rgba(0, 0, 0, 0.4) over Night" },
+      "projector-white": { "role": "neutral", "displayName": "Projector White", "canonical": "Color(red: 0.97, green: 0.96, blue: 0.93); radial gradient center stop, live perde only", "tonalRamp": ["#26251F", "#45433B", "#66635A", "#87847A", "#A8A59C", "#C8C5BD", "#E3E1D9", "#F7F5ED"] },
+      "projector-falloff": { "role": "neutral", "displayName": "Projector Falloff", "canonical": "Color(red: 0.80, green: 0.79, blue: 0.76); radial gradient edge stop at 260pt", "tonalRamp": ["#26251F", "#45433B", "#66635A", "#87847A", "#A8A59C", "#CCC9C2", "#E3E1D9", "#F7F5ED"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Marquee Name", "purpose": "\"TORPİDO\" only: Large Title, expanded width, Black, amber, one line, min scale 0.6." },
+      "title": { "displayName": "Perde Caption Title", "purpose": "Title 3 Bold stage title on the perde." },
+      "headline": { "displayName": "Button Label", "purpose": "Primary button label, Night on amber." },
+      "body": { "displayName": "Body", "purpose": "List rows, status rows, steps and notes." },
+      "subheadline": { "displayName": "Perde Detail", "purpose": "Centered perde instruction at 80% opacity." },
+      "footnote": { "displayName": "Section Header / Footer", "purpose": "System grouped-list headers and footers, including the safety line." },
+      "car-hint": { "displayName": "Car Hint", "purpose": "The single instruction on the CarPlay idle screen, white at 78%." }
+    },
+    "shadows": [
+      { "name": "bulb-glow", "value": "radial-gradient(circle, rgba(255,177,59,0.55) 25%, rgba(255,177,59,0) 100%)", "purpose": "Lit bulb halo on the phone, extending 0.6 x bulb size beyond the bulb; drawn as a gradient, not a shadow, so list rows never band it." }
+    ],
+    "motion": [
+      { "name": "bulb-chase", "value": "every third bulb lit, step 0.14s, linear", "purpose": "Live state on the marquee; replaced by a steady lit row under Reduce Motion." },
+      { "name": "perde-light", "value": "easeOut 0.4s", "purpose": "The perde fading from dark to projector-white and back when the broadcast starts or ends." }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one action on the Perde tab: full-width amber capsule, Night label with a leading play or stop symbol.",
+      "html": "<button class=\"ds-btn-primary\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path d=\"M3 1.5v13l11-6.5z\" fill=\"currentColor\"/></svg>Yansıtmayı Başlat</button>",
+      "css": ".ds-btn-primary { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; min-height: 50px; padding: 14px 20px; background: #FFB13B; color: #0A1324; border: none; border-radius: 999px; font: 600 17px/1.2 -apple-system, system-ui, sans-serif; cursor: pointer; transition: filter 0.15s; } .ds-btn-primary:hover { filter: brightness(1.05); } .ds-btn-primary:active { filter: brightness(0.85); } .ds-btn-primary:focus-visible { outline: 2px solid #FFB13B; outline-offset: 3px; }"
+    },
+    {
+      "name": "Status Row",
+      "kind": "card",
+      "refersTo": "list-row",
+      "description": "Grouped status list on Night Raised: icon and value amber when on, secondary when off.",
+      "html": "<div class=\"ds-list\"><div class=\"ds-row\"><span class=\"ds-row-icon ds-on\">&#9679;</span><span class=\"ds-row-title\">CarPlay</span><span class=\"ds-row-value ds-on\">Bağlı</span></div><div class=\"ds-row\"><span class=\"ds-row-icon\">&#9675;</span><span class=\"ds-row-title\">Yayın</span><span class=\"ds-row-value\">Kapalı</span></div></div>",
+      "css": ".ds-list { background: #16223A; border-radius: 22px; padding: 0 16px; font: 400 17px/1.3 -apple-system, system-ui, sans-serif; color: #fff; } .ds-row { display: flex; align-items: center; gap: 14px; min-height: 52px; border-bottom: 0.5px solid rgba(255,255,255,0.15); } .ds-row:last-child { border-bottom: none; } .ds-row-title { flex: 1; } .ds-row-icon, .ds-row-value { color: rgba(235,235,245,0.6); } .ds-on { color: #FFB13B; }"
+    },
+    {
+      "name": "Marquee",
+      "kind": "custom",
+      "refersTo": "perde-idle",
+      "description": "Signature: expanded black amber name, bulb row, 16:9 perde. Shown in the ready stage (steady bulbs, dark perde).",
+      "html": "<div class=\"ds-marquee\"><div class=\"ds-marquee-name\">TORPİDO</div><div class=\"ds-bulbs\"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class=\"ds-perde\"><strong>Perde hazır</strong><span>Aşağıdaki düğmeye dokunun, açılan pencerede Yayını Başlat'ı seçin.</span></div></div>",
+      "css": ".ds-marquee { background: #0A1324; padding: 20px; display: flex; flex-direction: column; gap: 4px; font-family: -apple-system, system-ui, sans-serif; } .ds-marquee-name { font: 900 34px/1 -apple-system, system-ui, sans-serif; font-stretch: expanded; color: #FFB13B; margin-bottom: 10px; } .ds-bulbs { display: flex; justify-content: space-between; padding: 8px; } .ds-bulbs i { width: 12px; height: 12px; border-radius: 50%; background: #FFB13B; box-shadow: 0 0 7px rgba(255,177,59,0.55); } .ds-perde { min-height: 198px; padding: 20px; border-radius: 14px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-align: center; transition: background 0.4s ease-out; } .ds-perde strong { font: 700 20px/1.2 -apple-system, system-ui, sans-serif; } .ds-perde span { font-size: 15px; opacity: 0.8; } .ds-perde:hover { background: radial-gradient(circle, #F7F5ED 4%, #CCC9C2 100%); color: #0A1324; border-color: transparent; }"
+    },
+    {
+      "name": "Perde Live",
+      "kind": "custom",
+      "refersTo": "perde-live",
+      "description": "The perde while broadcasting: projector-white radial light, Night caption.",
+      "html": "<div class=\"ds-perde-live\"><strong>Yayında</strong><span>İzlemek istediğiniz uygulamaya geçin.</span></div>",
+      "css": ".ds-perde-live { min-height: 198px; padding: 20px; border-radius: 14px; background: radial-gradient(circle, #F7F5ED 4%, #CCC9C2 100%); color: #0A1324; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-align: center; font-family: -apple-system, system-ui, sans-serif; } .ds-perde-live strong { font: 700 20px/1.2 -apple-system, system-ui, sans-serif; } .ds-perde-live span { font-size: 15px; opacity: 0.8; }"
+    },
+    {
+      "name": "Tab Bar",
+      "kind": "nav",
+      "description": "System tab bar, two tabs; selected tab in amber.",
+      "html": "<nav class=\"ds-tabs\"><a class=\"ds-tab ds-tab-on\" href=\"#\">Perde</a><a class=\"ds-tab\" href=\"#\">Ayarlar</a></nav>",
+      "css": ".ds-tabs { display: inline-flex; gap: 4px; padding: 4px; border-radius: 999px; background: #16223A; font: 500 11px/1 -apple-system, system-ui, sans-serif; } .ds-tab { padding: 10px 24px; border-radius: 999px; color: #fff; text-decoration: none; } .ds-tab-on { color: #FFB13B; background: rgba(255,255,255,0.12); } .ds-tab:focus-visible { outline: 2px solid #FFB13B; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Drive-In Marquee",
+    "overview": "Torpido is a drive-in cinema parked in the dashboard. The night sky is the ground, a row of amber marquee bulbs sits over a single 16:9 screen (the perde), and the screen lights projector-white only when the picture is actually running. The whole state of the product reads off that one composition: bulbs dark while waiting for the car, steady when ready, chasing while live.\n\nAround the marquee, everything is stock iOS: SF Pro, grouped lists, SF Symbols, the system tab bar and the system bordered-prominent button. The world lives in color, one signature component and one display face; it does not reinvent controls. Dark is the scene, not a theme: the app forces the dark color scheme because it is used in a parked car, mostly in the evening.\n\nDensity is low and the phone screen carries one action. The car display repeats the marquee (bulbs, name, one instruction) and otherwise hands the whole surface to the mirrored picture.",
+    "keyCharacteristics": [
+      "Night-navy ground with a slightly lifted navy for list rows; no light mode.",
+      "Marquee amber is scarce and meaningful: name, bulbs, the one primary button, on-state status.",
+      "One signature component: the marquee (name, bulb row, perde) whose bulbs encode state.",
+      "Projector-white appears only on the live perde.",
+      "Native iOS everywhere else: SF Pro, grouped lists, SF Symbols, system tab bar."
+    ],
+    "rules": [
+      { "name": "The Marquee Amber Rule", "body": "Amber belongs to the marquee name, the bulbs, the one primary button and on-state status values and icons. Informational, step and note icons use `.secondary`. If amber appears on something that is not lit, live or the action, it is wrong.", "section": "colors" },
+      { "name": "The Projector Rule", "body": "Projector-white lights the perde only while a broadcast is live. No other surface is ever light.", "section": "colors" },
+      { "name": "The Dark-Text-On-Light Rule", "body": "Text on amber or on the lit perde is Night, not white.", "section": "colors" },
+      { "name": "The One Expanded Word Rule", "body": "SF Pro Expanded Black is used for the marquee name and nothing else. Every other string is plain SF Pro at a system text style.", "section": "typography" },
+      { "name": "The Dynamic Type Rule", "body": "Phone type uses text styles and grows; bulbs scale with `@ScaledMetric` relative to body; the perde grows taller instead of truncating; at accessibility sizes the primary button drops its icon so the words wrap whole.", "section": "typography" },
+      { "name": "The Light Is The Only Lift Rule", "body": "Nothing is raised by shadow; things are lit. Bulb glow on the phone is a radial amber gradient (55% at the core falling to 0 at size/2 + 0.6 x size), drawn as a gradient rather than `.shadow` so list rows never clip it into a band.", "section": "elevation" }
+    ],
+    "dos": [
+      "**Do** keep Marquee Amber to the name, bulbs, the single primary button and on-state status (The Marquee Amber Rule).",
+      "**Do** put Night text on amber and on the lit perde.",
+      "**Do** sit every list on Night with Night Raised rows via the shared night ground.",
+      "**Do** let state show in the bulbs first: unlit, steady, chasing.",
+      "**Do** use system text styles, SF Symbols and system controls; let type scale and the perde grow.",
+      "**Do** respect Reduce Motion: the chase becomes a steady row."
+    ],
+    "donts": [
+      "**Don't** tint informational, step or note icons amber; they are `.secondary`.",
+      "**Don't** light any surface except the live perde with projector-white.",
+      "**Don't** use SF Pro Expanded or Black weight for anything but the marquee name.",
+      "**Don't** add a second filled button to a screen.",
+      "**Don't** add a light appearance; the app is dark by scene.",
+      "**Don't** lift surfaces with drop shadows; glow belongs to bulbs and is drawn as a gradient on the phone."
+    ]
+  }
+}
