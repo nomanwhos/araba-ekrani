@@ -1,0 +1,77 @@
+name: iOS
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build-test-screenshot:
+    runs-on: macos-latest
+    timeout-minutes: 30
+    env:
+      BUNDLE_ID: com.example.torpido
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Show toolchain
+        run: xcodebuild -version
+
+      - name: Generate Xcode project
+        run: |
+          brew install xcodegen
+          xcodegen generate
+
+      - name: Pick an iPhone simulator
+        run: |
+          UDID=$(xcrun simctl list devices available -j | python3 -c '
+          import json, sys
+          devices = json.load(sys.stdin)["devices"]
+          def version(runtime):
+              return tuple(int(p) for p in runtime.split("iOS-")[1].split("-"))
+          runtimes = sorted((r for r in devices if "iOS-" in r and version(r) >= (18,)), key=version)
+          phones = [d for d in devices[runtimes[-1]] if d["name"].startswith("iPhone")]
+          print(phones[0]["udid"])')
+          echo "UDID=$UDID" >> "$GITHUB_ENV"
+          echo "Using $UDID"
+
+      - name: Build and run unit tests
+        run: |
+          set -o pipefail
+          xcodebuild test \
+            -project Torpido.xcodeproj -scheme Torpido \
+            -destination "id=$UDID" -derivedDataPath build \
+            CODE_SIGN_IDENTITY=- CODE_SIGNING_REQUIRED=NO DEVELOPMENT_TEAM= \
+            | tee xcodebuild.log | grep -E "error:|warning:|Test Case|\*\* (TEST|BUILD)"
+
+      - name: Capture screenshots
+        run: |
+          mkdir -p .impeccable/review
+          APP=$(find build/Build/Products -name Torpido.app -path "*iphonesimulator*" | head -1)
+          xcrun simctl boot "$UDID" || true
+          xcrun simctl bootstatus "$UDID" -b
+          xcrun simctl ui "$UDID" appearance dark
+          xcrun simctl status_bar "$UDID" override --time 9:41 --batteryLevel 100 --cellularBars 4
+          xcrun simctl install "$UDID" "$APP"
+          shot() {
+            xcrun simctl terminate "$UDID" "$BUNDLE_ID" 2>/dev/null || true
+            xcrun simctl launch "$UDID" "$BUNDLE_ID" "${@:2}"
+            sleep 4
+            xcrun simctl io "$UDID" screenshot ".impeccable/review/$1.png"
+          }
+          shot phone-waiting
+          shot phone-ready -TorpidoStage ready
+          shot phone-live -TorpidoStage live
+          shot phone-settings -TorpidoTab settings
+          xcrun simctl ui "$UDID" content_size accessibility-extra-large
+          shot phone-live-large-type -TorpidoStage live
+
+      - name: Upload screenshots and log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: torpido-review
+          path: |
+            .impeccable/review
+            xcodebuild.log
