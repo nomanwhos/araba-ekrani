@@ -18,7 +18,7 @@ struct PerdeView: View {
                 .listRowSeparator(.hidden)
 
                 Section {
-                    StatusRow(title: "CarPlay", symbol: "carplay",
+                    StatusRow(title: "CarPlay", symbol: "car.fill",
                               value: state.isCarConnected ? "Bağlı" : "Bağlı değil",
                               isOn: state.isCarConnected)
                     StatusRow(title: "Yayın", symbol: "dot.radiowaves.left.and.right",
@@ -53,6 +53,9 @@ struct PerdeView: View {
                   systemImage: state.isStreaming ? "stop.fill" : "play.fill")
                 .font(.headline)
                 .foregroundStyle(Color("Night"))
+                .lineLimit(2)
+                .minimumScaleFactor(0.75)
+                .multilineTextAlignment(.center)
                 .frame(maxWidth: .infinity, minHeight: 44)
         }
         .buttonStyle(.borderedProminent)

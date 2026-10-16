@@ -18,19 +18,24 @@ struct MarqueeScreen: View {
         .accessibilityElement(children: .combine)
     }
 
+    /// 16:9 at default text sizes; grows taller instead of truncating at large ones.
     private var screen: some View {
         let isLive = stage == .live
-        return RoundedRectangle(cornerRadius: 14, style: .continuous)
-            .fill(isLive ? AnyShapeStyle(Self.projectorLight) : AnyShapeStyle(Color.black.opacity(0.4)))
-            .overlay {
-                RoundedRectangle(cornerRadius: 14, style: .continuous)
-                    .strokeBorder(Color.white.opacity(isLive ? 0 : 0.1), lineWidth: 1)
+        let shape = RoundedRectangle(cornerRadius: 14, style: .continuous)
+        return caption
+            .padding(20)
+            .frame(maxWidth: .infinity, minHeight: Self.screenMinHeight)
+            .background {
+                shape.fill(isLive ? AnyShapeStyle(Self.projectorLight) : AnyShapeStyle(Color.black.opacity(0.4)))
             }
-            .overlay { caption.padding(20) }
-            .aspectRatio(16 / 9, contentMode: .fit)
-            .shadow(color: Color.accentColor.opacity(isLive ? 0.35 : 0), radius: 24, x: 0, y: 10)
+            .overlay {
+                shape.strokeBorder(Color.white.opacity(isLive ? 0 : 0.1), lineWidth: 1)
+            }
             .animation(.easeOut(duration: 0.4), value: isLive)
     }
+
+    /// 16:9 of the narrowest current iPhone content width (~353pt).
+    private static let screenMinHeight: CGFloat = 198
 
     private var caption: some View {
         VStack(spacing: 6) {
@@ -40,9 +45,9 @@ struct MarqueeScreen: View {
                 .font(.title3.weight(.bold))
             Text(detail)
                 .font(.subheadline)
-                .multilineTextAlignment(.center)
                 .opacity(0.8)
         }
+        .multilineTextAlignment(.center)
         .foregroundStyle(stage == .live ? Color("Night") : .white)
     }
 
