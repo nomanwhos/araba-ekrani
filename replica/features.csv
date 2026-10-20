@@ -1,0 +1,48 @@
+feature,area,priority,original,clone,notes
+Mirror whole iPhone screen to the car display (Cast to Screen),casting,must,yes,yes,Torpido v0.1 Perde tab; runs in the car only once Apple grants the CarPlay entitlement
+Add an M3U/M3U8 playlist by pasting a URL,sources,must,yes,no,FAQ #6 validation: must start with #EXTM3U
+Parse group-title and tvg-logo into groups and channel logos,sources,must,yes,no,
+Home: channels grouped by playlist group,library,must,yes,no,S01
+Play HLS and plain HTTP streams,player,must,yes,no,AVPlayer covers these
+Full-screen player with play/pause and scrubbing,player,must,yes,no,S14
+Remember playback position and resume,player,must,yes,no,
+Favourite a channel or video,favorites,must,yes,no,S02
+Empty states for Home / Favorites / Sources,library,must,yes,no,seen in recording
+Refresh / rename / remove a source,sources,should,yes,no,S09
+Add a source by scanning a QR code,sources,should,yes,no,camera permission
+Xtream Codes account (server + username + password),sources,should,yes,no,credentials in Keychain
+Jellyfin server: libraries / seasons / episodes / resume,sources,should,yes,no,S16
+Import local videos from Files and Photos and play offline,local,should,yes,no,S02 Local / S19
+Rename / delete / reorder local videos,local,should,yes,no,1.1.3-1.1.4
+Search channels by name,search,should,yes,no,S18
+Subtitles: embedded and external tracks,player,should,yes,no,
+Audio track switching,player,should,yes,no,1.1.3
+Mini player while browsing,player,should,yes,no,S15
+Switch between a channel's playback sources,player,should,yes,no,FAQ #9
+Fit / stretch video size control,player,should,yes,no,review asked for auto-hide
+Car mode: landscape layout with oversized controls and one-tap next/previous,car,should,yes,no,S17; Pro feature in original
+Play a channel on the CarPlay display,car,should,yes,no,needs CarPlay entitlement like mirroring
+Background channel health check that hides dead channels,library,should,yes,no,FAQ #7; rate-limit the checks
+Reorder favourites by drag,favorites,should,yes,no,1.1.4
+Receive DLNA/UPnP casts from other apps (Cast from an app),casting,could,yes,no,S06; SSDP + AVTransport; Local Network permission
+Software decoder fallback for MKV / HEVC / DTS,player,could,yes,no,VLCKit or FFmpeg; big dependency
+Emby server,sources,could,yes,no,API close to Jellyfin
+Plex server,sources,could,yes,no,plex.tv sign-in
+Voice search,search,could,yes,no,1.1.1
+Search history with re-search and clear,search,could,yes,no,1.1.3
+In-app browser with bookmarks and kept sign-ins,browser,could,yes,no,S07; WKWebView
+Press-and-hold speed control,player,could,yes,no,1.1.3
+Audio visualizer styles for music streams,player,could,yes,no,1.1.3
+Latency (ms) badge on channel tiles,library,could,yes,no,seen only in a review
+Rotary knob / touchpad navigation on CarPlay,car,could,yes,no,1.0.5; Mercedes COMAND fix promised
+Live Activity on the Lock Screen while casting,casting,could,yes,no,
+In-app Help & FAQ,help,could,yes,no,S13; Torpido has a short how-it-works section
+Manual A/V delay offset,player,could,no,no,review request; CarTV lacks it - a chance to do better
+Pro paywall and weekly / yearly / lifetime purchases,monetisation,skip,yes,skip,personal app with no payments
+Redemption codes and restore purchases,monetisation,skip,yes,skip,no payments
+Creator referral / partner program,monetisation,skip,yes,skip,
+Ads attribution and analytics (Adjust / Meta / Umeng / FirstFew),privacy,skip,yes,skip,PRODUCT.md: no tracking
+Remote announcements and settings server,backend,skip,yes,skip,no network calls the owner did not ask for
+22 UI languages with a language picker,settings,skip,yes,skip,Turkish UI is enough for one owner
+Bundled channels or content,content,skip,no,skip,CarTV ships none either; the owner brings their own sources
+CarTV name / hero art / copy / green brand,brand,skip,yes,skip,Torpido has its own identity (DESIGN.md)
