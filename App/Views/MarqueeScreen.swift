@@ -59,7 +59,7 @@ struct MarqueeScreen: View {
                 .opacity(0.8)
         }
         .multilineTextAlignment(.center)
-        .foregroundStyle(stage == .live ? Color("Night") : .white)
+        .foregroundStyle(stage == .live ? Theme.bg : .white)
     }
 
     private var symbol: String {
@@ -141,7 +141,7 @@ private struct Bulb: View {
         Circle()
             .fill(isLit ? Color.accentColor : Color.accentColor.opacity(0.14))
             .overlay {
-                Circle().strokeBorder(Color.accentColor.opacity(isLit ? 0 : 0.35), lineWidth: 1)
+                Circle().strokeBorder(Color.accentColor.opacity(isLit ? 0 : 0.5), lineWidth: 1)
             }
             .overlay(alignment: .topLeading) {
                 Circle()

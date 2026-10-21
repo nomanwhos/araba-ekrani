@@ -13,7 +13,15 @@ struct TorpidoApp: App {
 
     var body: some Scene {
         WindowGroup {
+            #if DEBUG
+            if DebugLaunchState.showsCatalog {
+                DesignCatalogView()
+            } else {
+                RootView()
+            }
+            #else
             RootView()
+            #endif
         }
         .onChange(of: scenePhase) { _, phase in
             // The listener may have been torn down while suspended.

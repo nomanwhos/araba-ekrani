@@ -38,7 +38,7 @@ struct PerdeView: View {
                 } footer: {
                     Text("Sadece yolcuyken ya da araç park halindeyken kullanın. Araç kullanırken izlemeyin.")
                 }
-                .listRowBackground(Color("NightRaised"))
+                .listRowBackground(Theme.surface)
             }
             .nightGround()
             .navigationTitle("Torpido")
@@ -61,7 +61,7 @@ struct PerdeView: View {
                 // At accessibility sizes the icon goes so the words wrap whole instead of hyphenating.
                 .labelStyle(dynamicTypeSize.isAccessibilitySize ? AnyLabelStyle(TitleOnlyLabelStyle()) : AnyLabelStyle(TitleAndIconLabelStyle()))
                 .font(.headline)
-                .foregroundStyle(Color("Night"))
+                .foregroundStyle(Theme.bg)
                 .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
                 .frame(maxWidth: .infinity, minHeight: 44)

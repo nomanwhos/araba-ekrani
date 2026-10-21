@@ -31,7 +31,7 @@ struct SettingsView: View {
                         LabeledContent("Sürüm", value: Self.version)
                     }
                 }
-                .listRowBackground(Color("NightRaised"))
+                .listRowBackground(Theme.surface)
             }
             .nightGround()
             .navigationTitle("Ayarlar")

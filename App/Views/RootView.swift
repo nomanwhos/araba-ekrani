@@ -51,6 +51,6 @@ extension View {
     /// The night ground every list in Torpido sits on.
     func nightGround() -> some View {
         scrollContentBackground(.hidden)
-            .background(Color("Night"))
+            .background(Theme.bg)
     }
 }

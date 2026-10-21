@@ -70,6 +70,7 @@ jobs:
           shot phone-ready -TorpidoStage ready
           shot phone-live -TorpidoStage live
           shot phone-settings -TorpidoTab settings
+          shot design-catalog -TorpidoCatalog 1
           xcrun simctl ui "$UDID" content_size accessibility-extra-large
           shot phone-live-large-type -TorpidoStage live
 

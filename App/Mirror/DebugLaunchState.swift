@@ -19,6 +19,10 @@ enum DebugLaunchState {
         }
     }
 
+    static var showsCatalog: Bool {
+        UserDefaults.standard.bool(forKey: "TorpidoCatalog")
+    }
+
     static var initialTab: RootView.TabID {
         UserDefaults.standard.string(forKey: "TorpidoTab") == "settings" ? .settings : .perde
     }
