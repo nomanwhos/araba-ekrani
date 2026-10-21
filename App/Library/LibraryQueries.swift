@@ -55,7 +55,7 @@ enum LibraryQueries {
 
     /// Channels with no group-title, shown under "Diğer" on Home.
     static func ungroupedChannels(_ db: Database) throws -> [Channel] {
-        try Channel.filter(Column("group_id") == nil).order(Column("position")).limit(homeRowLimit).fetchAll(db)
+        try Channel.filter(Column("group_id") == nil && Column("health") != "down").order(Column("position")).limit(homeRowLimit).fetchAll(db)
     }
 
     /// Every channel in a group, down ones included, in playlist order.

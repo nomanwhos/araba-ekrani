@@ -5,17 +5,44 @@ import GRDB
 struct SourceStore {
     let database: AppDatabase
 
+    /// Playlist links usually carry the IPTV username and password in the query
+    /// or user-info. Those links go to the Keychain; the database keeps only a
+    /// credential-free form for display.
     func createM3U(url: URL, name: String) throws -> Source {
-        try database.writer.write { db in
-            let position = try Int.fetchOne(db, sql: "SELECT COALESCE(MAX(position) + 1, 0) FROM sources") ?? 0
-            let source = Source(
-                id: UUID().uuidString, kind: .m3u, name: name, url: url.absoluteString,
-                username: nil, keychainAccount: nil, status: .new, lastError: nil, lastRefreshedAt: nil,
-                position: position, createdAt: Clock.now(), updatedAt: Clock.now()
-            )
-            try source.insert(db)
-            return source
+        let id = UUID().uuidString
+        let shown = Self.displayURL(url)
+        let account = shown == url.absoluteString ? nil : id
+        if let account { try Keychain.set(url.absoluteString, account: account) }
+        do {
+            return try database.writer.write { db in
+                let position = try Int.fetchOne(db, sql: "SELECT COALESCE(MAX(position) + 1, 0) FROM sources") ?? 0
+                let source = Source(
+                    id: id, kind: .m3u, name: name, url: shown,
+                    username: nil, keychainAccount: account, status: .new, lastError: nil, lastRefreshedAt: nil,
+                    position: position, createdAt: Clock.now(), updatedAt: Clock.now()
+                )
+                try source.insert(db)
+                return source
+            }
+        } catch {
+            if let account { Keychain.delete(account: account) }
+            throw error
         }
+    }
+
+    /// The real download address, credentials included.
+    func playlistURL(for source: Source) -> URL? {
+        let text = source.keychainAccount.flatMap { Keychain.get(account: $0) } ?? source.url
+        return URL(string: text)
+    }
+
+    static func displayURL(_ url: URL) -> String {
+        guard var parts = URLComponents(url: url, resolvingAgainstBaseURL: false) else { return url.absoluteString }
+        parts.user = nil
+        parts.password = nil
+        parts.query = nil
+        parts.fragment = nil
+        return parts.url?.absoluteString ?? url.absoluteString
     }
 
     func markFailed(_ sourceID: String, message: String) throws {
@@ -32,6 +59,7 @@ struct SourceStore {
             _ = try source.delete(db)
             try OrphanCleanup.run(db)
         }
+        if let account = source.keychainAccount { Keychain.delete(account: account) }
     }
 
     func all() throws -> [Source] {

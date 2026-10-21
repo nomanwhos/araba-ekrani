@@ -43,11 +43,14 @@ final class PlayerController {
 
     func play(_ channel: Channel) {
         failure = nil
+        saveCurrentPosition()
         guard let url = try? database.reader.read({ try LibraryQueries.firstStreamURL(for: channel, $0) }) else {
+            player.replaceCurrentItem(with: nil)
+            nowPlaying = channel
+            isFullScreen = true
             failure = "Bu kanalın oynatılabilir bir adresi yok."
             return
         }
-        saveCurrentPosition()
         try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .moviePlayback)
         try? AVAudioSession.sharedInstance().setActive(true)
 

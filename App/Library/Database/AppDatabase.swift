@@ -42,8 +42,10 @@ extension AppDatabase {
                                                      appropriateFor: nil, create: true)
             let url = folder.appendingPathComponent("torpido.sqlite")
             let pool = try DatabasePool(path: url.path)
-            try? (url as NSURL).setResourceValue(URLFileProtection.completeUntilFirstUserAuthentication,
-                                                 forKey: .fileProtectionKey)
+            var values = URLResourceValues()
+            values.fileProtection = .completeUntilFirstUserAuthentication
+            var protectedURL = url
+            try? protectedURL.setResourceValues(values)
             return try AppDatabase(pool)
         } catch {
             // A broken database is unrecoverable at launch; surface it loudly in development.

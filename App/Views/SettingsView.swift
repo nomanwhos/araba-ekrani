@@ -52,6 +52,7 @@ struct SettingsView: View {
             }
             .nightGround()
             .navigationTitle("Ayarlar")
+            .miniPlayerInset()
         }
     }
 

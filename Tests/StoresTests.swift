@@ -53,4 +53,28 @@ final class StoresTests: XCTestCase {
         }
         XCTAssertEqual(leftovers, 0)
     }
+
+    func testPlaylistCredentialsStayOutOfTheDatabase() throws {
+        let store = SourceStore(database: database)
+        let secret = URL(string: "http://iptv.example/get.php?username=ali&password=gizli&type=m3u_plus")!
+
+        let source = try store.createM3U(url: secret, name: "Sağlayıcı")
+        defer { try? store.remove(source) }
+
+        let stored = try database.reader.read {
+            try String.fetchOne($0, sql: "SELECT url FROM sources WHERE id = ?", arguments: [source.id])
+        }
+        XCTAssertEqual(stored, "http://iptv.example/get.php")
+        XCTAssertNotNil(source.keychainAccount)
+        XCTAssertEqual(store.playlistURL(for: source), secret)
+    }
+
+    func testPlainPlaylistURLNeedsNoKeychain() throws {
+        let plain = URL(string: "https://lists.example/tr.m3u")!
+
+        let source = try SourceStore(database: database).createM3U(url: plain, name: "Açık")
+
+        XCTAssertNil(source.keychainAccount)
+        XCTAssertEqual(SourceStore(database: database).playlistURL(for: source), plain)
+    }
 }

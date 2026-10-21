@@ -42,6 +42,7 @@ struct PerdeView: View {
             }
             .nightGround()
             .navigationTitle("Torpido")
+            .miniPlayerInset()
             // The marquee carries the name; the bar's title stays for accessibility only.
             .toolbar(.hidden, for: .navigationBar)
         }

@@ -35,13 +35,18 @@ struct SourceService {
         let entries = try await download(url)
         let store = SourceStore(database: database)
         let source = try store.createM3U(url: url, name: name.isEmpty ? Self.defaultName(for: url) : name)
-        _ = try PlaylistImporter(database: database).importEntries(entries, into: source.id)
+        do {
+            _ = try PlaylistImporter(database: database).importEntries(entries, into: source.id)
+        } catch {
+            try? store.remove(source)
+            throw error
+        }
         return source
     }
 
     /// Re-downloads an existing source; on failure the old channels stay and the error is recorded.
     func refresh(_ source: Source) async throws {
-        guard let url = URL(string: source.url) else { throw SourceError.invalidURL }
+        guard let url = SourceStore(database: database).playlistURL(for: source) else { throw SourceError.invalidURL }
         do {
             let entries = try await download(url)
             _ = try PlaylistImporter(database: database).importEntries(entries, into: source.id)

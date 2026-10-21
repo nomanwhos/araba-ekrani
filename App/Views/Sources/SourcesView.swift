@@ -43,6 +43,7 @@ struct SourcesView: View {
         }
         .background(Theme.bg)
         .navigationTitle("Kaynaklar")
+        .miniPlayerInset()
         .toolbar {
             Button {
                 adding = true

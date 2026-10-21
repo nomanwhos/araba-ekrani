@@ -17,3 +17,15 @@ Screenshots for replica-diff are in `replica/clone-screens/`, captured on CI (iP
 | S15 Mini player | 2026-10-20 | partial | not yet seen on a device | — |
 
 Data layer: real, not fake. GRDB/SQLite with the schema from `replica/schema.sql`, an importer that upserts by stable key, and 5 new test files with 24 cases (30 with the mirroring tests), including a 20,000-entry import. There is no backend to swap in; replica-backend applies only to the media-server sources (Xtream, Jellyfin, Emby, Plex).
+
+## Review fixes (2026-10-21)
+
+Code review of the slice found no compile errors and these bugs, all fixed:
+- **Credentials:** IPTV playlist URLs with credentials (query or user-info) are now kept in the Keychain. `sources.url` holds only a credential-free form. Tested.
+- **Diğer row:** down channels without a group no longer show there.
+- **Failure feedback:** a channel with no stream URL now opens the player with an error instead of doing nothing.
+- **Failed import:** a failed first import removes the half-created source.
+- **File protection:** the database file protection is now set through `URLResourceValues`. The old call silently did nothing.
+- **Mini player:** it now also shows on Perde, Ayarlar and Kaynaklar.
+
+Noted for the search milestone: `channels_fts` uses the implicit rowid of a TEXT-keyed table. Give `channels` a stable integer key, or rebuild the index after any `VACUUM`, before search ships.
