@@ -14,6 +14,7 @@
  FORM: drive-in cinema, owner's choice (my list #1 over the assigned #7), seed 9b151894.
  FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
  */
+import GRDB
 import SwiftUI
 
 struct RootView: View {
@@ -46,6 +47,12 @@ struct RootView: View {
             }
         }
         .task {
+            #if DEBUG
+            if DebugLaunchState.autoplays,
+               let channel = try? AppDatabase.shared.reader.read({ try Channel.order(Column("name")).fetchOne($0) }) {
+                player.play(channel)
+            }
+            #endif
             do {
                 for try await keys in AppDatabase.shared.observe(LibraryQueries.favoriteKeys) { favorites = keys }
             } catch {

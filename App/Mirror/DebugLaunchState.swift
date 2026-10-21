@@ -20,6 +20,11 @@ enum DebugLaunchState {
         }
     }
 
+    /// `-TorpidoPlay 1`: starts the first seeded channel, for the player screenshot.
+    static var autoplays: Bool {
+        UserDefaults.standard.bool(forKey: "TorpidoPlay")
+    }
+
     static var showsCatalog: Bool {
         UserDefaults.standard.bool(forKey: "TorpidoCatalog")
     }

@@ -63,7 +63,7 @@ jobs:
           shot() {
             xcrun simctl terminate "$UDID" "$BUNDLE_ID" 2>/dev/null || true
             xcrun simctl launch "$UDID" "$BUNDLE_ID" "${@:2}"
-            sleep 4
+            sleep "${SHOT_WAIT:-4}"
             xcrun simctl io "$UDID" screenshot ".impeccable/review/$1.png"
           }
           shot home-empty
@@ -74,6 +74,7 @@ jobs:
           shot home -TorpidoSeed 1
           shot favorites -TorpidoTab favorites
           shot phone-settings -TorpidoTab settings
+          SHOT_WAIT=10 shot player -TorpidoPlay 1
           xcrun simctl ui "$UDID" content_size accessibility-extra-large
           shot phone-live-large-type -TorpidoTab perde -TorpidoStage live
           shot home-large-type
