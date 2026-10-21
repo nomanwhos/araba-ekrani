@@ -49,7 +49,7 @@ struct RootView: View {
         .task {
             #if DEBUG
             if DebugLaunchState.autoplays,
-               let channel = try? AppDatabase.shared.reader.read({ try Channel.order(Column("name")).fetchOne($0) }) {
+               let channel = try? await AppDatabase.shared.reader.read({ try Channel.order(Column("name")).fetchOne($0) }) {
                 player.play(channel)
             }
             #endif
