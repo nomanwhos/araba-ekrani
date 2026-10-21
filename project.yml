@@ -6,6 +6,11 @@ options:
     iOS: "18.0"
   createIntermediateGroups: true
 
+packages:
+  GRDB:
+    url: https://github.com/groue/GRDB.swift
+    from: "7.0.0"
+
 settings:
   base:
     SWIFT_VERSION: "5.0"
@@ -19,9 +24,15 @@ targets:
   Torpido:
     type: application
     platform: iOS
-    sources: [App, Shared]
+    sources:
+      - App
+      - Shared
+      # Single source of the database schema, bundled as schema.sql.
+      - path: replica/schema.sql
+        buildPhase: resources
     dependencies:
       - target: TorpidoBroadcast
+      - package: GRDB
     entitlements:
       path: App/Torpido.entitlements
       properties:
@@ -35,6 +46,12 @@ targets:
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         UILaunchScreen:
           UIColorName: Night
+        # Most IPTV streams and playlists are plain http. Personal build, not for the App Store.
+        NSAppTransportSecurity:
+          NSAllowsArbitraryLoads: true
+        # Keeps sound playing from the mini player with the screen locked.
+        UIBackgroundModes:
+          - audio
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait
           - UIInterfaceOrientationLandscapeLeft
@@ -76,6 +93,9 @@ targets:
     sources: [Tests]
     dependencies:
       - target: Torpido
+      # Already linked into the host app; only the module is needed here.
+      - package: GRDB
+        link: false
     settings:
       base:
         GENERATE_INFOPLIST_FILE: YES

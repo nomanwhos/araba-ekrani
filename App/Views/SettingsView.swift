@@ -8,6 +8,23 @@ struct SettingsView: View {
             List {
                 Group {
                     Section {
+                        NavigationLink {
+                            SourcesView()
+                        } label: {
+                            Label {
+                                Text("Kaynaklar")
+                            } icon: {
+                                Image(systemName: "list.bullet.rectangle")
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                    } header: {
+                        Text("Kanallar")
+                    } footer: {
+                        Text("M3U listelerinizi ekleyin, yenileyin ya da silin.")
+                    }
+
+                    Section {
                         Toggle("Görüntüyü ekrana doldur", isOn: $state.fillsCarScreen)
                     } header: {
                         Text("Araba ekranı")

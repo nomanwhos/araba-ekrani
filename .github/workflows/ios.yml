@@ -66,13 +66,17 @@ jobs:
             sleep 4
             xcrun simctl io "$UDID" screenshot ".impeccable/review/$1.png"
           }
-          shot phone-waiting
-          shot phone-ready -TorpidoStage ready
-          shot phone-live -TorpidoStage live
-          shot phone-settings -TorpidoTab settings
+          shot home-empty
+          shot phone-waiting -TorpidoTab perde
+          shot phone-ready -TorpidoTab perde -TorpidoStage ready
+          shot phone-live -TorpidoTab perde -TorpidoStage live
           shot design-catalog -TorpidoCatalog 1
+          shot home -TorpidoSeed 1
+          shot favorites -TorpidoTab favorites
+          shot phone-settings -TorpidoTab settings
           xcrun simctl ui "$UDID" content_size accessibility-extra-large
-          shot phone-live-large-type -TorpidoStage live
+          shot phone-live-large-type -TorpidoTab perde -TorpidoStage live
+          shot home-large-type
 
       - name: Publish screenshots to the review-shots branch
         if: github.event_name == 'push'

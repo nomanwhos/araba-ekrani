@@ -17,19 +17,39 @@
 import SwiftUI
 
 struct RootView: View {
-    enum TabID: Hashable {
-        case perde, settings
+    enum TabID: String, Hashable {
+        case home, favorites, perde, settings
     }
 
     @State private var selection: TabID = Self.initialTab
+    @Bindable private var player = PlayerController.shared
+    @State private var favorites: Set<String> = []
 
     var body: some View {
         TabView(selection: $selection) {
+            Tab("Ana Sayfa", systemImage: "house", value: TabID.home) {
+                HomeView()
+            }
+            Tab("Favoriler", systemImage: "star", value: TabID.favorites) {
+                FavoritesView()
+            }
             Tab("Perde", systemImage: "play.rectangle", value: TabID.perde) {
                 PerdeView()
             }
             Tab("Ayarlar", systemImage: "gearshape", value: TabID.settings) {
                 SettingsView()
+            }
+        }
+        .fullScreenCover(isPresented: $player.isFullScreen) {
+            PlayerScreen(controller: player, isFavorite: player.nowPlaying.map { favorites.contains($0.itemKey) } ?? false) {
+                if let channel = player.nowPlaying { try? FavoritesStore(database: .shared).toggle(channel) }
+            }
+        }
+        .task {
+            do {
+                for try await keys in AppDatabase.shared.observe(LibraryQueries.favoriteKeys) { favorites = keys }
+            } catch {
+                favorites = []
             }
         }
         // Used in a parked car, mostly in the evening: dark is the scene, not a theme.
@@ -42,7 +62,7 @@ private extension RootView {
         #if DEBUG
         DebugLaunchState.initialTab
         #else
-        .perde
+        .home
         #endif
     }
 }
