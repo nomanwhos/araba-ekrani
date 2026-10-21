@@ -76,6 +76,11 @@ enum LibraryQueries {
         Set(try String.fetchAll(db, sql: "SELECT item_key FROM favorites WHERE item_kind = 'channel'"))
     }
 
+    /// Sources browsed live (Jellyfin), shown as rows at the top of Home.
+    static func mediaServers(_ db: Database) throws -> [Source] {
+        try Source.filter(Column("kind") == Source.Kind.jellyfin.rawValue).order(Column("position")).fetchAll(db)
+    }
+
     static func sources(_ db: Database) throws -> [Source] {
         try Source.order(Column("position")).fetchAll(db)
     }

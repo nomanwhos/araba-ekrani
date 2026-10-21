@@ -9,16 +9,38 @@ struct SourceStore {
     /// or user-info. Those links go to the Keychain; the database keeps only a
     /// credential-free form for display.
     func createM3U(url: URL, name: String) throws -> Source {
-        let id = UUID().uuidString
         let shown = Self.displayURL(url)
-        let account = shown == url.absoluteString ? nil : id
-        if let account { try Keychain.set(url.absoluteString, account: account) }
+        return try create(kind: .m3u, name: name, url: shown, username: nil,
+                          secret: shown == url.absoluteString ? nil : url.absoluteString)
+    }
+
+    /// Xtream: server address and username in the database, password in the Keychain.
+    func createXtream(server: URL, username: String, password: String, name: String) throws -> Source {
+        try create(kind: .xtream, name: name, url: server.absoluteString, username: username,
+                   secret: SourceSecret(password: password).encoded())
+    }
+
+    /// Jellyfin: server and username in the database, access token and user id in the Keychain.
+    func createJellyfin(server: URL, username: String, session: JellyfinClient.Session, name: String) throws -> Source {
+        let source = try create(kind: .jellyfin, name: name, url: server.absoluteString, username: username,
+                                secret: SourceSecret(token: session.token, userID: session.userID).encoded())
+        try database.writer.write { db in
+            try db.execute(sql: "UPDATE sources SET status = 'ok', last_refreshed_at = ? WHERE id = ?",
+                           arguments: [Clock.now(), source.id])
+        }
+        return source
+    }
+
+    private func create(kind: Source.Kind, name: String, url: String, username: String?, secret: String?) throws -> Source {
+        let id = UUID().uuidString
+        let account = secret == nil ? nil : id
+        if let account, let secret { try Keychain.set(secret, account: account) }
         do {
             return try database.writer.write { db in
                 let position = try Int.fetchOne(db, sql: "SELECT COALESCE(MAX(position) + 1, 0) FROM sources") ?? 0
                 let source = Source(
-                    id: id, kind: .m3u, name: name, url: shown,
-                    username: nil, keychainAccount: account, status: .new, lastError: nil, lastRefreshedAt: nil,
+                    id: id, kind: kind, name: name, url: url,
+                    username: username, keychainAccount: account, status: .new, lastError: nil, lastRefreshedAt: nil,
                     position: position, createdAt: Clock.now(), updatedAt: Clock.now()
                 )
                 try source.insert(db)
@@ -30,7 +52,23 @@ struct SourceStore {
         }
     }
 
-    /// The real download address, credentials included.
+    func xtreamClient(for source: Source) -> XtreamClient? {
+        guard source.kind == .xtream, let server = URL(string: source.url), let username = source.username,
+              let password = secret(for: source)?.password else { return nil }
+        return XtreamClient(server: server, username: username, password: password)
+    }
+
+    func jellyfinClient(for source: Source) -> JellyfinClient? {
+        guard source.kind == .jellyfin, let server = URL(string: source.url),
+              let token = secret(for: source)?.token, let userID = secret(for: source)?.userID else { return nil }
+        return JellyfinClient(server: server, session: .init(token: token, userID: userID))
+    }
+
+    private func secret(for source: Source) -> SourceSecret? {
+        source.keychainAccount.flatMap { Keychain.get(account: $0) }.flatMap(SourceSecret.decode)
+    }
+
+    /// The real download address of an M3U source, credentials included.
     func playlistURL(for source: Source) -> URL? {
         let text = source.keychainAccount.flatMap { Keychain.get(account: $0) } ?? source.url
         return URL(string: text)
@@ -43,6 +81,13 @@ struct SourceStore {
         parts.query = nil
         parts.fragment = nil
         return parts.url?.absoluteString ?? url.absoluteString
+    }
+
+    func markRefreshed(_ sourceID: String) throws {
+        try database.writer.write { db in
+            try db.execute(sql: "UPDATE sources SET status = 'ok', last_error = NULL, last_refreshed_at = ?, updated_at = ? WHERE id = ?",
+                           arguments: [Clock.now(), Clock.now(), sourceID])
+        }
     }
 
     func markFailed(_ sourceID: String, message: String) throws {
@@ -62,8 +107,27 @@ struct SourceStore {
         if let account = source.keychainAccount { Keychain.delete(account: account) }
     }
 
+    func source(id: String) throws -> Source? {
+        try database.reader.read { try Source.fetchOne($0, key: id) }
+    }
+
     func all() throws -> [Source] {
         try database.reader.read { try Source.order(Column("position")).fetchAll($0) }
+    }
+}
+
+/// What a source keeps in the Keychain, stored as JSON. (M3U sources store the full URL instead.)
+struct SourceSecret: Codable, Equatable {
+    var password: String?
+    var token: String?
+    var userID: String?
+
+    func encoded() -> String {
+        String(decoding: (try? JSONEncoder().encode(self)) ?? Data(), as: UTF8.self)
+    }
+
+    static func decode(_ text: String) -> SourceSecret? {
+        try? JSONDecoder().decode(SourceSecret.self, from: Data(text.utf8))
     }
 }
 

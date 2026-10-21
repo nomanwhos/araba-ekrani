@@ -23,8 +23,8 @@ private struct MiniPlayerInset: ViewModifier {
 
     func body(content: Content) -> some View {
         content.safeAreaInset(edge: .bottom) {
-            if player.showsMiniPlayer, let channel = player.nowPlaying {
-                MiniPlayerBar(title: channel.name, subtitle: nil, isPlaying: player.isPlaying,
+            if player.showsMiniPlayer, let item = player.nowPlaying {
+                MiniPlayerBar(title: item.title, subtitle: item.serverItem?.source.name, isPlaying: player.isPlaying,
                               togglePlayback: { player.togglePlayback() },
                               expand: { player.isFullScreen = true })
                     .padding(.bottom, Theme.Space.s8)

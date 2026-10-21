@@ -9,10 +9,10 @@ extension SnakeCaseRecord {
     static var databaseColumnEncodingStrategy: DatabaseColumnEncodingStrategy { .convertToSnakeCase }
 }
 
-struct Source: SnakeCaseRecord, Identifiable, Equatable {
+struct Source: SnakeCaseRecord, Identifiable, Equatable, Hashable {
     static let databaseTableName = "sources"
 
-    enum Kind: String, Codable { case m3u, xtream, jellyfin, emby, plex }
+    enum Kind: String, Codable, Hashable { case m3u, xtream, jellyfin, emby, plex }
     enum Status: String, Codable { case new, ok, failed }
 
     var id: String

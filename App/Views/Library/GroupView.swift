@@ -17,7 +17,7 @@ struct GroupView: View {
                         player.play(channel)
                     } label: {
                         ChannelRow(name: channel.name, logoURL: channel.logoURL, health: channel.displayHealth,
-                                   isFavorite: isFavorite, isPlaying: player.nowPlaying?.id == channel.id)
+                                   isFavorite: isFavorite, isPlaying: player.nowPlaying?.channel?.id == channel.id)
                     }
                     .buttonStyle(.plain)
                     .listRowBackground(Theme.surface)

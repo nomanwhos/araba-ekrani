@@ -22,7 +22,7 @@ struct FavoritesView: View {
                             player.play(channel)
                         } label: {
                             ChannelRow(name: channel.name, logoURL: channel.logoURL, health: channel.displayHealth,
-                                       isPlaying: player.nowPlaying?.id == channel.id)
+                                       isPlaying: player.nowPlaying?.channel?.id == channel.id)
                         }
                         .buttonStyle(.plain)
                         .listRowBackground(Theme.surface)

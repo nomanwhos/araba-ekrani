@@ -42,9 +42,11 @@ struct RootView: View {
             }
         }
         .fullScreenCover(isPresented: $player.isFullScreen) {
-            PlayerScreen(controller: player, isFavorite: player.nowPlaying.map { favorites.contains($0.itemKey) } ?? false) {
-                if let channel = player.nowPlaying { try? FavoritesStore(database: .shared).toggle(channel) }
-            }
+            PlayerScreen(controller: player,
+                         isFavorite: player.nowPlaying?.channel.map { favorites.contains($0.itemKey) },
+                         toggleFavorite: {
+                             if let channel = player.nowPlaying?.channel { try? FavoritesStore(database: .shared).toggle(channel) }
+                         })
         }
         .task {
             #if DEBUG

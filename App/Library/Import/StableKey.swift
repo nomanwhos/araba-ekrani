@@ -17,14 +17,21 @@ enum TurkishFold {
 /// Gives every playlist entry a key that stays the same when the playlist is
 /// downloaded again, so favourites and resume positions survive a refresh.
 ///
-/// Prefers tvg-id, falls back to the name; always scoped by group. Repeats of
-/// the same key in one playlist get "#2", "#3"... in playlist order.
+/// A provider id (Xtream stream id) is unique on its own, so it survives a
+/// channel moving to another category. Otherwise: tvg-id, then the name,
+/// scoped by group. Repeats of the same key in one playlist get "#2", "#3"...
+/// in playlist order.
 struct StableKeyMaker {
     private var seen: [String: Int] = [:]
 
     mutating func key(for entry: PlaylistEntry) -> String {
-        let identity = entry.tvgID.map { "tvg:" + TurkishFold.fold($0) } ?? "name:" + TurkishFold.fold(entry.name)
-        let base = identity + "|" + TurkishFold.fold(entry.group ?? "")
+        let base: String
+        if let stableID = entry.stableID {
+            base = "id:" + stableID
+        } else {
+            let identity = entry.tvgID.map { "tvg:" + TurkishFold.fold($0) } ?? "name:" + TurkishFold.fold(entry.name)
+            base = identity + "|" + TurkishFold.fold(entry.group ?? "")
+        }
         let count = (seen[base] ?? 0) + 1
         seen[base] = count
         return count == 1 ? base : "\(base)#\(count)"

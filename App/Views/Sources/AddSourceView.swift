@@ -1,38 +1,37 @@
 import SwiftUI
 
-/// S09b, M3U only for now: paste a playlist link, optionally name it, add.
+/// S09b: add an M3U link, an Xtream account or a Jellyfin server.
 struct AddSourceView: View {
+    private enum Kind: String, CaseIterable, Identifiable {
+        case m3u = "M3U", xtream = "Xtream", jellyfin = "Jellyfin"
+        var id: String { rawValue }
+    }
+
     @Environment(\.dismiss) private var dismiss
+    @State private var kind = Kind.m3u
     @State private var urlText = ""
+    @State private var username = ""
+    @State private var password = ""
     @State private var name = ""
     @State private var isAdding = false
     @State private var error: String?
-    @FocusState private var urlFocused: Bool
 
     var body: some View {
         NavigationStack {
             Form {
                 Section {
-                    TextField("https://…/liste.m3u", text: $urlText, axis: .vertical)
-                        .keyboardType(.URL)
-                        .textInputAutocapitalization(.never)
-                        .autocorrectionDisabled()
-                        .focused($urlFocused)
-                        .accessibilityLabel("Liste bağlantısı")
-                    PasteButton(payloadType: String.self) { strings in
-                        if let first = strings.first { urlText = first }
+                    Picker("Kaynak türü", selection: $kind) {
+                        ForEach(Kind.allCases) { Text($0.rawValue).tag($0) }
                     }
-                    .labelStyle(.titleAndIcon)
-                } header: {
-                    Text("M3U bağlantısı")
-                } footer: {
-                    if let error {
-                        Text(error).foregroundStyle(Theme.danger)
-                    } else {
-                        Text("IPTV sağlayıcınızın verdiği .m3u ya da .m3u8 adresi. Torpido kanal içermez; liste sizin.")
-                    }
+                    .pickerStyle(.segmented)
+                    .listRowBackground(Color.clear)
+                    .listRowInsets(EdgeInsets())
                 }
-                .listRowBackground(Theme.surface)
+
+                switch kind {
+                case .m3u: m3uFields
+                case .xtream, .jellyfin: serverFields
+                }
 
                 Section("Ad (isteğe bağlı)") {
                     TextField("Örn. Ev listesi", text: $name)
@@ -51,23 +50,90 @@ struct AddSourceView: View {
                     if isAdding {
                         ProgressView()
                     } else {
-                        Button("Ekle", action: add)
-                            .disabled(urlText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                        Button("Ekle", action: add).disabled(!canAdd)
                     }
                 }
             }
             .interactiveDismissDisabled(isAdding)
-            .onAppear { urlFocused = true }
+            .onChange(of: kind) { error = nil }
         }
         .preferredColorScheme(.dark)
+    }
+
+    private var m3uFields: some View {
+        Section {
+            TextField("https://…/liste.m3u", text: $urlText, axis: .vertical)
+                .keyboardType(.URL)
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled()
+                .accessibilityLabel("Liste bağlantısı")
+            PasteButton(payloadType: String.self) { strings in
+                if let first = strings.first { urlText = first }
+            }
+            .labelStyle(.titleAndIcon)
+        } header: {
+            Text("M3U bağlantısı")
+        } footer: {
+            footer(hint: "IPTV sağlayıcınızın verdiği .m3u ya da .m3u8 adresi. Torpido kanal içermez; liste sizin. Bağlantıdaki şifre iPhone'un anahtar zincirinde saklanır.")
+        }
+        .listRowBackground(Theme.surface)
+    }
+
+    private var serverFields: some View {
+        Section {
+            TextField(kind == .xtream ? "http://sunucu.com:8080" : "http://192.168.1.10:8096", text: $urlText)
+                .keyboardType(.URL)
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled()
+                .accessibilityLabel("Sunucu adresi")
+            TextField("Kullanıcı adı", text: $username)
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled()
+                .textContentType(.username)
+            SecureField("Şifre", text: $password)
+                .textContentType(.password)
+        } header: {
+            Text(kind == .xtream ? "Xtream hesabı" : "Jellyfin sunucusu")
+        } footer: {
+            footer(hint: kind == .xtream
+                   ? "Sağlayıcınızın verdiği sunucu adresi, kullanıcı adı ve şifre. Şifre yalnızca bu iPhone'un anahtar zincirinde durur."
+                   : "Kendi Jellyfin sunucunuzun adresi ve hesabınız. Filmler ve diziler Ana Sayfa'daki sunucu satırından açılır.")
+        }
+        .listRowBackground(Theme.surface)
+    }
+
+    @ViewBuilder
+    private func footer(hint: String) -> some View {
+        if let error {
+            Text(error).foregroundStyle(Theme.danger)
+        } else {
+            Text(hint)
+        }
+    }
+
+    private var canAdd: Bool {
+        let hasURL = !urlText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        switch kind {
+        case .m3u: return hasURL
+        case .xtream: return hasURL && !username.isEmpty && !password.isEmpty
+        case .jellyfin: return hasURL && !username.isEmpty
+        }
     }
 
     private func add() {
         error = nil
         isAdding = true
+        let service = SourceService(database: .shared)
         Task {
             do {
-                _ = try await SourceService(database: .shared).addM3U(urlText: urlText, name: name)
+                switch kind {
+                case .m3u:
+                    _ = try await service.addM3U(urlText: urlText, name: name)
+                case .xtream:
+                    _ = try await service.addXtream(serverText: urlText, username: username, password: password, name: name)
+                case .jellyfin:
+                    _ = try await service.addJellyfin(serverText: urlText, username: username, password: password, name: name)
+                }
                 dismiss()
             } catch {
                 self.error = error.localizedDescription

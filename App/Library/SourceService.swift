@@ -23,10 +23,13 @@ enum SourceError: LocalizedError, Equatable {
     }
 }
 
-/// Downloads a playlist as it streams in, then imports it.
+/// Adds and refreshes sources: M3U playlists (streamed download), Xtream
+/// accounts and Jellyfin servers (official APIs, the owner's own credentials).
 struct SourceService {
     let database: AppDatabase
     var session: URLSession = .shared
+
+    private var http: HTTPClient { HTTPClient(session: session) }
 
     /// Validates, creates the source, downloads and imports it. On a failed
     /// first download the source is not kept.
@@ -35,23 +38,69 @@ struct SourceService {
         let entries = try await download(url)
         let store = SourceStore(database: database)
         let source = try store.createM3U(url: url, name: name.isEmpty ? Self.defaultName(for: url) : name)
-        do {
-            _ = try PlaylistImporter(database: database).importEntries(entries, into: source.id)
-        } catch {
-            try? store.remove(source)
-            throw error
-        }
-        return source
+        return try importOrRollBack(entries, into: source)
+    }
+
+    /// Signs in to the owner's Xtream account and imports its live channels.
+    func addXtream(serverText: String, username: String, password: String, name: String) async throws -> Source {
+        guard let server = HTTPClient.serverURL(from: serverText) else { throw ServerError.invalidServer }
+        let user = username.trimmingCharacters(in: .whitespaces)
+        guard !user.isEmpty, !password.isEmpty else { throw ServerError.authFailed }
+        let client = XtreamClient(server: server, username: user, password: password, http: http)
+        let entries = try await client.playlistEntries(account: client.login())
+        guard !entries.isEmpty else { throw SourceError.empty }
+        let store = SourceStore(database: database)
+        let source = try store.createXtream(server: server, username: user, password: password,
+                                            name: name.isEmpty ? (server.host ?? "Xtream") : name)
+        return try importOrRollBack(entries, into: source)
+    }
+
+    /// Signs in to the owner's Jellyfin server; the library is browsed live, not imported.
+    func addJellyfin(serverText: String, username: String, password: String, name: String) async throws -> Source {
+        guard let server = HTTPClient.serverURL(from: serverText) else { throw ServerError.invalidServer }
+        let user = username.trimmingCharacters(in: .whitespaces)
+        guard !user.isEmpty else { throw ServerError.authFailed }
+        var client = JellyfinClient(server: server, http: http)
+        let session = try await client.signIn(username: user, password: password)
+        client.session = session
+        _ = try await client.libraries()
+        return try SourceStore(database: database).createJellyfin(server: server, username: user, session: session,
+                                                                  name: name.isEmpty ? (server.host ?? "Jellyfin") : name)
     }
 
     /// Re-downloads an existing source; on failure the old channels stay and the error is recorded.
     func refresh(_ source: Source) async throws {
-        guard let url = SourceStore(database: database).playlistURL(for: source) else { throw SourceError.invalidURL }
+        let store = SourceStore(database: database)
         do {
-            let entries = try await download(url)
-            _ = try PlaylistImporter(database: database).importEntries(entries, into: source.id)
+            switch source.kind {
+            case .m3u:
+                guard let url = store.playlistURL(for: source) else { throw SourceError.invalidURL }
+                _ = try PlaylistImporter(database: database).importEntries(try await download(url), into: source.id)
+            case .xtream:
+                guard var client = store.xtreamClient(for: source) else { throw ServerError.authFailed }
+                client.http = http
+                let entries = try await client.playlistEntries(account: client.login())
+                _ = try PlaylistImporter(database: database).importEntries(entries, into: source.id)
+            case .jellyfin:
+                guard var client = store.jellyfinClient(for: source) else { throw ServerError.authFailed }
+                client.http = http
+                _ = try await client.libraries()
+                try store.markRefreshed(source.id)
+            case .emby, .plex:
+                break
+            }
         } catch {
-            try SourceStore(database: database).markFailed(source.id, message: error.localizedDescription)
+            try store.markFailed(source.id, message: error.localizedDescription)
+            throw error
+        }
+    }
+
+    private func importOrRollBack(_ entries: [PlaylistEntry], into source: Source) throws -> Source {
+        do {
+            _ = try PlaylistImporter(database: database).importEntries(entries, into: source.id)
+            return source
+        } catch {
+            try? SourceStore(database: database).remove(source)
             throw error
         }
     }

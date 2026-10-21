@@ -5,7 +5,8 @@ import SwiftUI
 /// the channel name and favourite, and an error message when the stream fails.
 struct PlayerScreen: View {
     @Bindable var controller: PlayerController
-    let isFavorite: Bool
+    /// nil for items that cannot be favourited (media-server items).
+    let isFavorite: Bool?
     let toggleFavorite: () -> Void
 
     var body: some View {
@@ -23,18 +24,20 @@ struct PlayerScreen: View {
                 }
                 .accessibilityLabel("Oynatıcıyı küçült")
 
-                Text(controller.nowPlaying?.name ?? "")
+                Text(controller.nowPlaying?.title ?? "")
                     .font(.headline)
                     .lineLimit(1)
                 Spacer(minLength: 0)
 
-                Button(action: toggleFavorite) {
-                    Image(systemName: isFavorite ? "star.fill" : "star")
-                        .font(.headline)
-                        .foregroundStyle(isFavorite ? Theme.accent : Theme.text)
-                        .frame(width: Theme.Size.tapMin, height: Theme.Size.tapMin)
+                if let isFavorite {
+                    Button(action: toggleFavorite) {
+                        Image(systemName: isFavorite ? "star.fill" : "star")
+                            .font(.headline)
+                            .foregroundStyle(isFavorite ? Theme.accent : Theme.text)
+                            .frame(width: Theme.Size.tapMin, height: Theme.Size.tapMin)
+                    }
+                    .accessibilityLabel(isFavorite ? "Favorilerden çıkar" : "Favorilere ekle")
                 }
-                .accessibilityLabel(isFavorite ? "Favorilerden çıkar" : "Favorilere ekle")
             }
             .foregroundStyle(Theme.text)
             .padding(.horizontal, Theme.Space.s8)

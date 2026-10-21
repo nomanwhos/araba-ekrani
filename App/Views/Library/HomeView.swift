@@ -4,7 +4,7 @@ import SwiftUI
 struct HomeView: View {
     private enum Load: Equatable {
         case loading
-        case loaded(sources: Int, sections: [HomeSection], ungrouped: [Channel])
+        case loaded(sources: Int, sections: [HomeSection], ungrouped: [Channel], servers: [Source])
         case failed(String)
     }
 
@@ -26,6 +26,7 @@ struct HomeView: View {
                     }
                 }
                 .navigationDestination(for: ChannelGroup.self) { GroupView(group: $0) }
+                .navigationDestination(for: MediaRoute.self) { MediaBrowserView(route: $0) }
                 .sheet(isPresented: $addingSource) { AddSourceView() }
                 .miniPlayerInset()
         }
@@ -42,18 +43,21 @@ struct HomeView: View {
         case .failed(let message):
             EmptyState(symbol: "exclamationmark.triangle", title: "Kanallar okunamadı", message: message)
                 .frame(maxHeight: .infinity)
-        case .loaded(0, _, _):
+        case .loaded(0, _, _, _):
             EmptyState(symbol: "tv", title: "Henüz kanal yok",
                        message: "Bir M3U bağlantısı ekleyin, kanallar burada gruplarıyla listelenir.",
                        actionTitle: "Kaynak ekle") { addingSource = true }
                 .frame(maxHeight: .infinity)
-        case .loaded(_, let sections, let ungrouped) where sections.isEmpty && ungrouped.isEmpty:
+        case .loaded(_, let sections, let ungrouped, let servers) where sections.isEmpty && ungrouped.isEmpty && servers.isEmpty:
             EmptyState(symbol: "antenna.radiowaves.left.and.right.slash", title: "Açık kanal yok",
                        message: "Eklediğiniz listelerde şu an çalışan kanal bulunamadı. Ayarlar › Kaynaklar'dan listeyi yenileyin.")
                 .frame(maxHeight: .infinity)
-        case .loaded(_, let sections, let ungrouped):
+        case .loaded(_, let sections, let ungrouped, let servers):
             ScrollView {
                 LazyVStack(alignment: .leading, spacing: Theme.Space.s24) {
+                    if !servers.isEmpty {
+                        serverRows(servers)
+                    }
                     ForEach(sections) { section in
                         VStack(alignment: .leading, spacing: Theme.Space.s8) {
                             NavigationLink(value: section.group) {
@@ -79,6 +83,35 @@ struct HomeView: View {
         }
     }
 
+    private func serverRows(_ servers: [Source]) -> some View {
+        VStack(alignment: .leading, spacing: Theme.Space.s8) {
+            Text("Medya sunucuları")
+                .font(.title3.weight(.bold))
+                .foregroundStyle(Theme.text)
+            ForEach(servers) { server in
+                NavigationLink(value: MediaRoute(source: server, parent: nil)) {
+                    HStack(spacing: Theme.Space.s12) {
+                        Image(systemName: "server.rack")
+                            .foregroundStyle(Theme.textMutedOnSurface)
+                            .accessibilityHidden(true)
+                        Text(server.name)
+                            .foregroundStyle(Theme.text)
+                        Spacer(minLength: Theme.Space.s8)
+                        Image(systemName: "chevron.right")
+                            .font(.footnote.weight(.semibold))
+                            .foregroundStyle(Theme.textMuted)
+                    }
+                    .padding(.horizontal, Theme.Space.s16)
+                    .frame(minHeight: Theme.Size.tapMin)
+                    .background(Theme.surface, in: RoundedRectangle(cornerRadius: Theme.Radius.tile, style: .continuous))
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+            }
+        }
+        .padding(.horizontal, Theme.Space.s16)
+    }
+
     private func tileRow(_ channels: [Channel]) -> some View {
         ScrollView(.horizontal, showsIndicators: false) {
             LazyHStack(alignment: .top, spacing: Theme.Space.s12) {
@@ -87,7 +120,7 @@ struct HomeView: View {
                         player.play(channel)
                     } label: {
                         ChannelTile(channel: channel, isFavorite: favorites.contains(channel.itemKey),
-                                    isPlaying: player.nowPlaying?.id == channel.id)
+                                    isPlaying: player.nowPlaying?.channel?.id == channel.id)
                     }
                     .buttonStyle(.plain)
                     .favoriteContextMenu(for: channel, isFavorite: favorites.contains(channel.itemKey))
@@ -100,9 +133,10 @@ struct HomeView: View {
     private func observeLibrary() async {
         do {
             for try await value in AppDatabase.shared.observe({ db in
-                (try LibraryQueries.sourceCount(db), try LibraryQueries.homeSections(db), try LibraryQueries.ungroupedChannels(db))
+                (try LibraryQueries.sourceCount(db), try LibraryQueries.homeSections(db),
+                 try LibraryQueries.ungroupedChannels(db), try LibraryQueries.mediaServers(db))
             }) {
-                load = .loaded(sources: value.0, sections: value.1, ungrouped: value.2)
+                load = .loaded(sources: value.0, sections: value.1, ungrouped: value.2, servers: value.3)
             }
         } catch {
             load = .failed(error.localizedDescription)

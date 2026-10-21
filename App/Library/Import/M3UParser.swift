@@ -7,6 +7,8 @@ struct PlaylistEntry: Equatable {
     var logoURL: URL?
     var tvgID: String?
     var streamURL: URL
+    /// A provider's own id (e.g. an Xtream stream id). Wins over tvg-id and name for the stable key.
+    var stableID: String? = nil
 }
 
 enum PlaylistError: Error, Equatable {

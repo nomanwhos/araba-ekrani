@@ -8,10 +8,10 @@ Full-screen player with play/pause and scrubbing,player,must,yes,yes,system AVPl
 Remember playback position and resume,player,must,yes,yes,every 10 s and on close; live streams start live; unit tested
 Favourite a channel or video,favorites,must,yes,yes,"context menu, swipe, player star; survives playlist refresh (unit tested)"
 Empty states for Home / Favorites / Sources,library,must,yes,yes,"S01, S02, S09"
-Refresh / rename / remove a source,sources,should,yes,partial,refresh and remove done (S09); rename not yet
+Refresh / rename / remove a source,sources,should,yes,partial,"refresh (M3U, Xtream, Jellyfin) and remove done; rename not yet"
 Add a source by scanning a QR code,sources,should,yes,no,camera permission
-Xtream Codes account (server + username + password),sources,should,yes,no,credentials in Keychain
-Jellyfin server: libraries / seasons / episodes / resume,sources,should,yes,no,S16
+Xtream Codes account (server + username + password),sources,should,yes,partial,"live TV: login, categories, streams; password in Keychain, play URL built at play time; VOD/series not yet"
+Jellyfin server: libraries / seasons / episodes / resume,sources,should,yes,yes,"sign-in, browse, HLS playback (server transcodes), resume from and reported to the server; S16"
 Import local videos from Files and Photos and play offline,local,should,yes,no,S02 Local / S19
 Rename / delete / reorder local videos,local,should,yes,no,1.1.3-1.1.4
 Search channels by name,search,should,yes,no,S18
