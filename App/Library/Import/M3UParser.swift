@@ -46,7 +46,8 @@ struct M3UParser {
         }
         if line.uppercased().hasPrefix("#EXTGRP:") {
             let group = String(line.dropFirst("#EXTGRP:".count)).trimmingCharacters(in: .whitespaces)
-            if !group.isEmpty { pending?.group = pending?.group ?? group }
+            // group-title on #EXTINF wins; #EXTGRP only fills a missing group.
+            if !group.isEmpty, pending?.group == nil { pending?.group = group }
             return nil
         }
         if line.hasPrefix("#") { return nil }
