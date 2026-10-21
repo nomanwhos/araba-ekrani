@@ -13,7 +13,7 @@ Screenshots for replica-diff are in `replica/clone-screens/`, captured on CI (iP
 | S08 Settings | 2026-10-20 | done | delete-all-data row | — |
 | S09 Sources | 2026-10-20 | partial | rename, reorder | — |
 | S09b Add source | 2026-10-20 | partial | QR scan, Xtream, Jellyfin/Emby/Plex | one Swift rule (exclusive access) broke the first CI build: `pending?.group = pending?.group ?? x` |
-| S14 Player | 2026-10-20 | partial | stream switch, subtitles/audio menus, fit/fill, A/V offset; not yet seen playing | needed a shared AVPlayer owner so the mini player and the full player stay in sync |
+| S14 Player | 2026-10-21 | partial | stream switch, subtitles/audio menus, fit/fill, A/V offset (playback itself verified on CI) | needed a shared AVPlayer owner so the mini player and the full player stay in sync |
 | S15 Mini player | 2026-10-20 | partial | not yet seen on a device | — |
 
 Data layer: real, not fake. GRDB/SQLite with the schema from `replica/schema.sql`, an importer that upserts by stable key, and 5 new test files with 24 cases (30 with the mirroring tests), including a 20,000-entry import. There is no backend to swap in; replica-backend applies only to the media-server sources (Xtream, Jellyfin, Emby, Plex).
@@ -29,3 +29,5 @@ Code review of the slice found no compile errors and these bugs, all fixed:
 - **Mini player:** it now also shows on Perde, Ayarlar and Kaynaklar.
 
 Noted for the search milestone: `channels_fts` uses the implicit rowid of a TEXT-keyed table. Give `channels` a stable integer key, or rebuild the index after any `VACUUM`, before search ships.
+
+2026-10-21: S14 was verified on CI. `-TorpidoPlay 1` starts the first seeded channel, and the screenshot shows Apple's HLS test stream playing at 00:00:15 with the favourite star lit. Two more compile fixes came after the review: an `await` on GRDB's async `read` inside `.task`, and `URLResourceValues.fileProtection` turned out to be read-only, so it is set through `FileManager` instead.

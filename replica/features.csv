@@ -3,8 +3,8 @@ Mirror whole iPhone screen to the car display (Cast to Screen),casting,must,yes,
 Add an M3U/M3U8 playlist by pasting a URL,sources,must,yes,yes,S09b; paste button; #EXTM3U validation with Turkish errors
 Parse group-title and tvg-logo into groups and channel logos,sources,must,yes,yes,"also #EXTGRP, tvg-id, BOM/CRLF, quoted commas; unit tested"
 Home: channels grouped by playlist group,library,must,yes,yes,"S01 rows of tiles, 20 per group, see-all to S01b"
-Play HLS and plain HTTP streams,player,must,yes,partial,AVPlayer wired and ATS opened; not yet seen playing on a device or simulator screenshot
-Full-screen player with play/pause and scrubbing,player,must,yes,partial,system player + close/favourite bar; untested on device
+Play HLS and plain HTTP streams,player,must,yes,yes,HLS verified playing in the simulator on CI (Apple test stream); plain http allowed via ATS
+Full-screen player with play/pause and scrubbing,player,must,yes,yes,system AVPlayerViewController controls + close and favourite bar (S14 screenshot)
 Remember playback position and resume,player,must,yes,yes,every 10 s and on close; live streams start live; unit tested
 Favourite a channel or video,favorites,must,yes,yes,"context menu, swipe, player star; survives playlist refresh (unit tested)"
 Empty states for Home / Favorites / Sources,library,must,yes,yes,"S01, S02, S09"
