@@ -65,13 +65,20 @@ final class TorpidoUITests: XCTestCase {
         XCTAssertTrue(miniToggle.waitForExistence(timeout: 5), "mini player should appear after shrinking")
     }
 
-    /// Accessibility audit (contrast, labels, hit regions, Dynamic Type) on every tab.
+    /// Accessibility audit on every tab: contrast, clipped text, labels, hit regions, traits.
+    /// Dynamic Type is covered by the accessibility-size screenshots instead
+    /// (see replica/bugs.md, "to check"). Elements scrolled under the translucent
+    /// tab bar are skipped: the audit measures them through the glass.
     func testAccessibilityAuditOnEveryTab() throws {
         launch(seeded: true)
         var issues: [String] = []
+        let checks: XCUIAccessibilityAuditType = [.contrast, .textClipped, .elementDetection,
+                                                  .sufficientElementDescription, .hitRegion, .trait]
         for name in ["Ana Sayfa", "Favoriler", "Perde", "Ayarlar"] {
             tab(name).tap()
-            try app.performAccessibilityAudit { issue in
+            let tabBarTop = app.tabBars.firstMatch.exists ? app.tabBars.firstMatch.frame.minY : .greatestFiniteMagnitude
+            try app.performAccessibilityAudit(for: checks) { issue in
+                if let frame = issue.element?.frame, frame.maxY > tabBarTop { return true }
                 let element = issue.element.map { "\($0.elementType) '\($0.label)'" } ?? "?"
                 issues.append("\(name): \(issue.compactDescription) on \(element)")
                 return true

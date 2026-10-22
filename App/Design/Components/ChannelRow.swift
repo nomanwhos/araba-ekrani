@@ -88,6 +88,8 @@ struct HealthBadge: View {
         case .ok(let latencyMs):
             Text("\(latencyMs) ms")
                 .font(.caption.monospacedDigit())
+                .lineLimit(1)
+                .fixedSize()
                 .foregroundStyle(color(for: latencyMs))
                 .accessibilityLabel("Gecikme \(latencyMs) milisaniye")
         case .down:
