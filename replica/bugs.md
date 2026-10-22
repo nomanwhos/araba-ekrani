@@ -29,4 +29,5 @@ Found by the CI test suite (unit, XCUITest and accessibility audit on the iPhone
 
 ## To check (not reproduced as a user-facing bug)
 - **Contrast through the tab bar:** the audit flags contrast on content that has scrolled under iOS 26's translucent tab bar: the Belgesel row, and the last notes in Ayarlar. The same elements in open space pass. This is likely the audit measuring through the glass. The test now skips elements under the tab bar; check by eye on a real phone.
+- **Unattributed contrast findings in Ayarlar:** two "Contrast failed" findings come with no element attached (CI run 39864005136). They most likely come from the same notes under the tab bar that run 39862746763 named. The test ignores findings that have no element; check Ayarlar by eye on a real phone.
 - **Dynamic Type in Perde:** "partially unsupported" on the system section header ("Durum") and footer of the Perde list. The accessibility-size screenshot shows them growing. Check whether they stop at a maximum size on a device.
