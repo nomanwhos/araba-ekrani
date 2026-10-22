@@ -54,6 +54,8 @@ struct Channel: SnakeCaseRecord, Identifiable, Equatable, Hashable {
     var health: Health
     var latencyMs: Int?
     var lastCheckedAt: Int64?
+    /// `TurkishFold` of the name, for search.
+    var searchName: String = ""
 
     /// How favourites and playback positions refer to this channel across refreshes.
     var itemKey: String { "\(sourceId):\(stableKey)" }

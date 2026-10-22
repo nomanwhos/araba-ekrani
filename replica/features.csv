@@ -14,7 +14,7 @@ Xtream Codes account (server + username + password),sources,should,yes,partial,"
 Jellyfin server: libraries / seasons / episodes / resume,sources,should,yes,yes,"sign-in, browse, HLS playback (server transcodes), resume from and reported to the server; S16"
 Import local videos from Files and Photos and play offline,local,should,yes,no,S02 Local / S19
 Rename / delete / reorder local videos,local,should,yes,no,1.1.3-1.1.4
-Search channels by name,search,should,yes,no,S18
+Search channels by name,search,should,yes,yes,"S18 on Ana Sayfa; every word must match; Turkish-folded (ı/İ, ç, ş...); top 200; unit tested"
 Subtitles: embedded and external tracks,player,should,yes,no,
 Audio track switching,player,should,yes,no,1.1.3
 Mini player while browsing,player,should,yes,partial,MiniPlayerBar docked on Home/Favorites/groups; untested on device
@@ -29,7 +29,7 @@ Software decoder fallback for MKV / HEVC / DTS,player,could,yes,no,VLCKit or FFm
 Emby server,sources,could,yes,no,API close to Jellyfin
 Plex server,sources,could,yes,no,plex.tv sign-in
 Voice search,search,could,yes,no,1.1.1
-Search history with re-search and clear,search,could,yes,no,1.1.3
+Search history with re-search and clear,search,could,yes,yes,"recent searches as suggestions, clear; newest first, kept 50"
 In-app browser with bookmarks and kept sign-ins,browser,could,yes,no,S07; WKWebView
 Press-and-hold speed control,player,could,yes,no,1.1.3
 Audio visualizer styles for music streams,player,could,yes,no,1.1.3

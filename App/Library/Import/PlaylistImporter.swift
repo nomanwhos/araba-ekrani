@@ -29,11 +29,11 @@ struct PlaylistImporter {
                 RETURNING id
                 """)
             let upsertChannel = try db.cachedStatement(sql: """
-                INSERT INTO channels (id, source_id, group_id, stable_key, name, logo_url, tvg_id, position)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO channels (id, source_id, group_id, stable_key, name, search_name, logo_url, tvg_id, position)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ON CONFLICT (source_id, stable_key) DO UPDATE SET
-                  group_id = excluded.group_id, name = excluded.name, logo_url = excluded.logo_url,
-                  tvg_id = excluded.tvg_id, position = excluded.position
+                  group_id = excluded.group_id, name = excluded.name, search_name = excluded.search_name,
+                  logo_url = excluded.logo_url, tvg_id = excluded.tvg_id, position = excluded.position
                 RETURNING id
                 """)
             let clearStreams = try db.cachedStatement(sql: "DELETE FROM channel_streams WHERE channel_id = ?")
@@ -62,7 +62,7 @@ struct PlaylistImporter {
                 positionInGroup[slot] = position + 1
 
                 let channelID = try String.fetchOne(upsertChannel, arguments: [
-                    UUID().uuidString, sourceID, groupID, keys.key(for: entry), entry.name,
+                    UUID().uuidString, sourceID, groupID, keys.key(for: entry), entry.name, TurkishFold.fold(entry.name),
                     entry.logoURL?.absoluteString, entry.tvgID, position,
                 ])!
                 try markChannel.execute(arguments: [channelID])

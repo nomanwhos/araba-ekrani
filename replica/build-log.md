@@ -28,6 +28,8 @@ Code review of the slice found no compile errors and these bugs, all fixed:
 - **File protection:** the database file protection is now set through `URLResourceValues`. The old call silently did nothing.
 - **Mini player:** it now also shows on Perde, Ayarlar and Kaynaklar.
 
-Noted for the search milestone: `channels_fts` uses the implicit rowid of a TEXT-keyed table. Give `channels` a stable integer key, or rebuild the index after any `VACUUM`, before search ships.
+Resolved by migration v2: the FTS table is gone; search uses the folded `search_name` column.
 
 2026-10-21: S14 was verified on CI. `-TorpidoPlay 1` starts the first seeded channel, and the screenshot shows Apple's HLS test stream playing at 00:00:15 with the favourite star lit. Two more compile fixes came after the review: an `await` on GRDB's async `read` inside `.task`, and `URLResourceValues.fileProtection` turned out to be read-only, so it is set through `FileManager` instead.
+
+| S18 Search | 2026-10-22 | done | voice search | FTS5 dropped in migration v2: unicode61 cannot fold dotless ı, and the TEXT-keyed rowid risk goes away with it. A folded `search_name` column with LIKE (top 200) is simpler and fast enough |

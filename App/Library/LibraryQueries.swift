@@ -81,6 +81,32 @@ enum LibraryQueries {
         try Source.filter(Column("kind") == Source.Kind.jellyfin.rawValue).order(Column("position")).fetchAll(db)
     }
 
+    /// How many results search shows; a longer list is a sign to type more.
+    static let searchLimit = 200
+
+    /// Channels whose name contains every word of the query, accent- and
+    /// case-insensitive the Turkish way ("kanali" finds "Kanalı", "cocuk" finds "Çocuk").
+    static func search(_ text: String, _ db: Database) throws -> [Channel] {
+        let words = TurkishFold.fold(text).split(separator: " ").map(String.init)
+        guard !words.isEmpty else { return [] }
+        let clause = words.map { _ in "search_name LIKE ? ESCAPE '!'" }.joined(separator: " AND ")
+        let patterns = words.map { "%" + escapeLike($0) + "%" }
+        return try Channel.fetchAll(db, sql: """
+            SELECT * FROM channels WHERE \(clause)
+            ORDER BY health = 'down', length(name), name LIMIT \(searchLimit)
+            """, arguments: StatementArguments(patterns))
+    }
+
+    static func recentSearches(_ db: Database) throws -> [String] {
+        try String.fetchAll(db, sql: "SELECT text FROM search_queries ORDER BY searched_at DESC LIMIT 8")
+    }
+
+    private static func escapeLike(_ text: String) -> String {
+        text.replacingOccurrences(of: "!", with: "!!")
+            .replacingOccurrences(of: "%", with: "!%")
+            .replacingOccurrences(of: "_", with: "!_")
+    }
+
     static func sources(_ db: Database) throws -> [Source] {
         try Source.order(Column("position")).fetchAll(db)
     }

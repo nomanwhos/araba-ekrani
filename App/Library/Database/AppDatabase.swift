@@ -18,6 +18,23 @@ final class AppDatabase {
         migrator.registerMigration("v1") { db in
             try db.execute(sql: try schemaV1())
         }
+        // v2: search uses a Turkish-folded column instead of FTS5. unicode61 cannot
+        // fold dotless ı to i, and the FTS table keyed on the implicit rowid of a
+        // TEXT-keyed table could desync after VACUUM.
+        migrator.registerMigration("v2-search-name") { db in
+            try db.execute(sql: """
+                DROP TRIGGER IF EXISTS channels_ai;
+                DROP TRIGGER IF EXISTS channels_ad;
+                DROP TRIGGER IF EXISTS channels_au;
+                DROP TABLE IF EXISTS channels_fts;
+                ALTER TABLE channels ADD COLUMN search_name TEXT NOT NULL DEFAULT '';
+                """)
+            for row in try Row.fetchAll(db, sql: "SELECT id, name FROM channels") {
+                let name: String = row["name"]
+                try db.execute(sql: "UPDATE channels SET search_name = ? WHERE id = ?",
+                               arguments: [TurkishFold.fold(name), row["id"] as String])
+            }
+        }
         return migrator
     }
 

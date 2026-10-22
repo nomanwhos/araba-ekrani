@@ -167,6 +167,34 @@ struct FavoritesStore {
     }
 }
 
+struct SearchHistoryStore {
+    private static let keep = 50
+
+    let database: AppDatabase
+
+    /// Records a submitted search; repeating one moves it to the top.
+    func record(_ text: String) throws {
+        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return }
+        try database.writer.write { db in
+            try db.execute(sql: """
+                INSERT INTO search_queries (id, text, searched_at)
+                VALUES (?, ?, MAX(?, COALESCE((SELECT MAX(searched_at) FROM search_queries), 0) + 1))
+                ON CONFLICT (text) DO UPDATE SET searched_at = excluded.searched_at
+                """, arguments: [UUID().uuidString, trimmed, Clock.now()])
+            // searched_at always moves forward, so two searches in the same second keep their order.
+            try db.execute(sql: """
+                DELETE FROM search_queries WHERE id NOT IN
+                  (SELECT id FROM search_queries ORDER BY searched_at DESC LIMIT ?)
+                """, arguments: [Self.keep])
+        }
+    }
+
+    func clear() throws {
+        try database.writer.write { try $0.execute(sql: "DELETE FROM search_queries") }
+    }
+}
+
 struct PlaybackPositionStore {
     /// Shorter than this and resuming is more annoying than useful.
     private static let minimumResumeSeconds = 30.0

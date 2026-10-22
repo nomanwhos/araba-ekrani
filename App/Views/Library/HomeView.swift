@@ -11,12 +11,34 @@ struct HomeView: View {
     @State private var load = Load.loading
     @State private var favorites: Set<String> = []
     @State private var addingSource = false
+    @State private var query = ""
+    @State private var recentSearches: [String] = []
     private let player = PlayerController.shared
 
     var body: some View {
         NavigationStack {
-            content
+            Group {
+                if query.trimmingCharacters(in: .whitespaces).isEmpty {
+                    content
+                } else {
+                    SearchResultsView(query: query)
+                }
+            }
                 .background(Theme.bg)
+                .searchable(text: $query, prompt: "Kanal ara")
+                .searchSuggestions {
+                    if query.isEmpty {
+                        ForEach(recentSearches, id: \.self) { text in
+                            Label(text, systemImage: "clock.arrow.circlepath").searchCompletion(text)
+                        }
+                        if !recentSearches.isEmpty {
+                            Button("Geçmişi temizle", role: .destructive) {
+                                try? SearchHistoryStore(database: .shared).clear()
+                            }
+                        }
+                    }
+                }
+                .onSubmit(of: .search) { SearchHistoryStore(database: .shared).recordIgnoringErrors(query) }
                 .navigationTitle("Ana Sayfa")
                 .toolbar {
                     Button {
@@ -32,6 +54,13 @@ struct HomeView: View {
         }
         .task { await observeLibrary() }
         .task { await observeFavorites() }
+        .task {
+            do {
+                for try await value in AppDatabase.shared.observe(LibraryQueries.recentSearches) { recentSearches = value }
+            } catch {
+                recentSearches = []
+            }
+        }
     }
 
     @ViewBuilder
