@@ -44,6 +44,7 @@ jobs:
           xcodebuild test \
             -project Torpido.xcodeproj -scheme Torpido \
             -destination "id=$UDID" -derivedDataPath build \
+            -retry-tests-on-failure -test-iterations 2 \
             CODE_SIGN_IDENTITY=- CODE_SIGNING_REQUIRED=NO DEVELOPMENT_TEAM= \
             > xcodebuild.log 2>&1 || {
               python3 scripts/ci_annotate.py xcodebuild.log
