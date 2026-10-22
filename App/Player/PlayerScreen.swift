@@ -11,7 +11,7 @@ struct PlayerScreen: View {
 
     var body: some View {
         ZStack(alignment: .top) {
-            SystemPlayer(player: controller.player)
+            SystemPlayer(player: controller.player, fills: controller.fillsScreen)
                 .ignoresSafeArea()
 
             HStack(spacing: Theme.Space.s8) {
@@ -28,6 +28,15 @@ struct PlayerScreen: View {
                     .font(.headline)
                     .lineLimit(1)
                 Spacer(minLength: 0)
+
+                Button {
+                    controller.fillsScreen.toggle()
+                } label: {
+                    Image(systemName: controller.fillsScreen ? "arrow.down.right.and.arrow.up.left" : "arrow.up.left.and.arrow.down.right")
+                        .font(.headline)
+                        .frame(width: Theme.Size.tapMin, height: Theme.Size.tapMin)
+                }
+                .accessibilityLabel(controller.fillsScreen ? "Görüntüyü sığdır" : "Görüntüyü ekrana doldur")
 
                 if let isFavorite {
                     Button(action: toggleFavorite) {
@@ -61,15 +70,19 @@ struct PlayerScreen: View {
 
 private struct SystemPlayer: UIViewControllerRepresentable {
     let player: AVPlayer
+    let fills: Bool
 
     func makeUIViewController(context: Context) -> AVPlayerViewController {
         let controller = AVPlayerViewController()
         controller.player = player
         controller.allowsPictureInPicturePlayback = false
+        // Subtitles, audio tracks and speed come from the system controls when the stream has them.
+        controller.videoGravity = fills ? .resizeAspectFill : .resizeAspect
         return controller
     }
 
     func updateUIViewController(_ controller: AVPlayerViewController, context: Context) {
+        controller.videoGravity = fills ? .resizeAspectFill : .resizeAspect
         if controller.player !== player { controller.player = player }
     }
 }

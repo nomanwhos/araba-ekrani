@@ -38,6 +38,10 @@ final class PlayerController {
     private(set) var isPlaying = false
     private(set) var failure: String?
     var isFullScreen = false
+    /// Fill the screen (crops edges) instead of fitting with black bars. Remembered.
+    var fillsScreen: Bool = UserDefaults.standard.bool(forKey: "playerFillsScreen") {
+        didSet { UserDefaults.standard.set(fillsScreen, forKey: "playerFillsScreen") }
+    }
 
     let player = AVPlayer()
     private let database: AppDatabase
