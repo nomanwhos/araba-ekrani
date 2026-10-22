@@ -35,6 +35,14 @@ enum DebugLaunchState {
 
     /// `-TorpidoSeed 1`: a small synthetic playlist so library screens have content.
     /// Streams are Apple's public HLS test streams; channel names are made up.
+    /// `-TorpidoReset 1`: removes every source (and with it channels, favourites,
+    /// positions, Keychain items) so each UI test starts from the same state.
+    static func resetIfRequested() {
+        guard UserDefaults.standard.bool(forKey: "TorpidoReset") else { return }
+        let store = SourceStore(database: .shared)
+        for source in (try? store.all()) ?? [] { try? store.remove(source) }
+    }
+
     static func seedIfRequested() {
         guard UserDefaults.standard.bool(forKey: "TorpidoSeed"),
               (try? SourceStore(database: .shared).all().isEmpty) == true else { return }

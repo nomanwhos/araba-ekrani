@@ -101,10 +101,22 @@ targets:
         GENERATE_INFOPLIST_FILE: YES
         PRODUCT_BUNDLE_IDENTIFIER: $(BUNDLE_ID_PREFIX).torpido.tests
 
+  TorpidoUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources: [UITests]
+    dependencies:
+      - target: Torpido
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: $(BUNDLE_ID_PREFIX).torpido.uitests
+        TEST_TARGET_NAME: Torpido
+
 schemes:
   Torpido:
     build:
       targets:
         Torpido: all
     test:
-      targets: [TorpidoTests]
+      targets: [TorpidoTests, TorpidoUITests]

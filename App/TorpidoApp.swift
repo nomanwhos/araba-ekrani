@@ -8,6 +8,7 @@ struct TorpidoApp: App {
         MirrorServer.shared.start()
         #if DEBUG
         DebugLaunchState.apply()
+        DebugLaunchState.resetIfRequested()
         DebugLaunchState.seedIfRequested()
         #endif
     }
