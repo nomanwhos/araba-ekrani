@@ -68,9 +68,15 @@ final class TorpidoUITests: XCTestCase {
     /// Accessibility audit (contrast, labels, hit regions, Dynamic Type) on every tab.
     func testAccessibilityAuditOnEveryTab() throws {
         launch(seeded: true)
+        var issues: [String] = []
         for name in ["Ana Sayfa", "Favoriler", "Perde", "Ayarlar"] {
             tab(name).tap()
-            try app.performAccessibilityAudit()
+            try app.performAccessibilityAudit { issue in
+                let element = issue.element.map { "\($0.elementType) '\($0.label)'" } ?? "?"
+                issues.append("\(name): \(issue.compactDescription) on \(element)")
+                return true
+            }
         }
+        XCTAssertTrue(issues.isEmpty, issues.joined(separator: " | "))
     }
 }

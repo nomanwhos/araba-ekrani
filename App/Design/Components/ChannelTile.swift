@@ -22,6 +22,8 @@ struct ChannelTile: View {
                 }
                 .frame(width: side, height: side)
                 .background(Theme.surface, in: RoundedRectangle(cornerRadius: Theme.Radius.tile, style: .continuous))
+                // The logo or its initials are decoration; VoiceOver should start with the name.
+                .accessibilityHidden(true)
                 .overlay {
                     RoundedRectangle(cornerRadius: Theme.Radius.tile, style: .continuous)
                         .strokeBorder(Theme.accent, lineWidth: isPlaying ? 2 : 0)
@@ -32,6 +34,7 @@ struct ChannelTile: View {
                         .font(.caption)
                         .foregroundStyle(Theme.accent)
                         .padding(Theme.Space.s6)
+                        .accessibilityHidden(true)
                 }
             }
             Text(channel.name)
@@ -43,6 +46,7 @@ struct ChannelTile: View {
         }
         .contentShape(Rectangle())
         .accessibilityElement(children: .combine)
+        .accessibilityValue(isFavorite ? "Favori" : "")
         .accessibilityAddTraits(.isButton)
     }
 
