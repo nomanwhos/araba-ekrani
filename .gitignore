@@ -19,3 +19,4 @@ replica/screens/
 # graphify
 graphify-out/
 .graphifyignore
+replica/diffs/*.png
