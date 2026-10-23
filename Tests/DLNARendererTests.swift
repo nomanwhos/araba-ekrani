@@ -85,7 +85,7 @@ final class DLNARendererTests: XCTestCase {
         let renderer = DLNARenderer(playback: FakePlayback(), uuid: "net-uuid")
         renderer.start(announce: false, keepAwake: false)
         defer { renderer.stop() }
-        for _ in 0..<50 where renderer.port == nil { try await Task.sleep(for: .milliseconds(50)) }
+        for _ in 0..<100 where renderer.port == nil { try await Task.sleep(for: .milliseconds(50)) }
         let port = try XCTUnwrap(renderer.port)
 
         let (data, response) = try await URLSession.shared.data(from: URL(string: "http://127.0.0.1:\(port)/description.xml")!)

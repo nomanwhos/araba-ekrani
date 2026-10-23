@@ -102,7 +102,8 @@ final class DLNARenderer {
         address = nil
     }
 
-    var port: UInt16? { listener?.port?.rawValue }
+    /// Set once the listener is ready; before that NWListener reports port 0.
+    var port: UInt16? { address == nil ? nil : listener?.port?.rawValue }
 
     private var location: String? {
         guard let port, let ip = Self.wifiAddress() ?? (address == "127.0.0.1" ? address : nil) else { return nil }

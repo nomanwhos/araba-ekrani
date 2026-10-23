@@ -24,7 +24,7 @@ Car mode: landscape layout with oversized controls and one-tap next/previous,car
 Play a channel on the CarPlay display,car,should,yes,no,needs CarPlay entitlement like mirroring
 Background channel health check that hides dead channels,library,should,yes,yes,"on app foreground; M3U only (never Xtream); 80 per run, 4 at a time, 3 s, 30 min per channel; Range 1 KB; unit tested"
 Reorder favourites by drag,favorites,should,yes,no,1.1.4
-Receive DLNA/UPnP casts from other apps (Cast from an app),casting,could,yes,no,S06; SSDP + AVTransport; Local Network permission
+Receive DLNA/UPnP casts from other apps (Cast from an app),casting,could,yes,yes,S06; SSDP + AVTransport; Local Network permission
 Software decoder fallback for MKV / HEVC / DTS,player,could,yes,no,VLCKit or FFmpeg; big dependency
 Emby server,sources,could,yes,no,API close to Jellyfin
 Plex server,sources,could,yes,no,plex.tv sign-in
