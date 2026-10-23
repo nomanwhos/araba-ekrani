@@ -26,7 +26,8 @@ iPhone ekranı ──► Yayın eklentisi (ReplayKit) ──► 127.0.0.1:48621 
 - [x] Bulutta derleme ve testler geçti
 - [x] Apple Developer hesabı (Team ID 6UDRFAGF26)
 - [ ] CarPlay navigation izni Apple'dan alındı
-- [ ] Telefona kuruldu ve arabada denendi
+- [x] Telefona kuruldu (TestFlight 0.1.0 build 41, 2026-10-23)
+- [ ] Arabada denendi (CarPlay izni bekleniyor)
 
 ## Apple tarafında yapılacaklar (sahibi yapar)
 
