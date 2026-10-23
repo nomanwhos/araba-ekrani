@@ -37,7 +37,8 @@ There are no OAuth scopes to request. All Jellyfin and Xtream calls use the owne
   - Server responses are decoded leniently, and bad JSON becomes `unexpectedResponse`, never a crash.
   - Playlist frames and sizes are bounded.
 - [x] **Authorisation.** Single user; nothing to check. Every Jellyfin request carries the owner's own token.
-- [ ] **Rate limits.** The app makes no automatic calls yet. When the health check lands it is capped at 4 concurrent requests, with a 30-minute minimum interval and off for Xtream (architecture.md).
+- [x] **Rate limits.** The only automatic network job is the health check: M3U sources only, never Xtream. It checks at most 80 channels per run, 4 at a time, with a 3 s timeout and 30 minutes per channel, and reads just the first kilobyte.
+- [ ] **Stream URLs.** M3U stream URLs are stored as the playlist gives them. Providers that generate `m3u_plus` lists put the username and password in every stream path, so those land in SQLite, protected only by the app sandbox and Data Protection. Fix: detect `/<user>/<pass>/` paths at import and store them in the Xtream form, resolved at play time.
 - [x] **Webhooks.** None.
 - [x] **Uploads.** None. Local video import is a could-have and will check free space.
 - [x] **No user data in URLs or logs.**

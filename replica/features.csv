@@ -22,7 +22,7 @@ Switch between a channel's playback sources,player,should,yes,no,needs importer 
 Fit / stretch video size control,player,should,yes,yes,"player bar button, remembered; system pinch also works"
 Car mode: landscape layout with oversized controls and one-tap next/previous,car,should,yes,no,S17; Pro feature in original
 Play a channel on the CarPlay display,car,should,yes,no,needs CarPlay entitlement like mirroring
-Background channel health check that hides dead channels,library,should,yes,no,FAQ #7; rate-limit the checks
+Background channel health check that hides dead channels,library,should,yes,yes,"on app foreground; M3U only (never Xtream); 80 per run, 4 at a time, 3 s, 30 min per channel; Range 1 KB; unit tested"
 Reorder favourites by drag,favorites,should,yes,no,1.1.4
 Receive DLNA/UPnP casts from other apps (Cast from an app),casting,could,yes,no,S06; SSDP + AVTransport; Local Network permission
 Software decoder fallback for MKV / HEVC / DTS,player,could,yes,no,VLCKit or FFmpeg; big dependency
@@ -33,7 +33,7 @@ Search history with re-search and clear,search,could,yes,yes,"recent searches as
 In-app browser with bookmarks and kept sign-ins,browser,could,yes,no,S07; WKWebView
 Press-and-hold speed control,player,could,yes,partial,system speed menu for on-demand video (not press-and-hold)
 Audio visualizer styles for music streams,player,could,yes,no,1.1.3
-Latency (ms) badge on channel tiles,library,could,yes,partial,HealthBadge on tiles and rows; values come from the (not yet built) health check
+Latency (ms) badge on channel tiles,library,could,yes,yes,fed by the health check
 Rotary knob / touchpad navigation on CarPlay,car,could,yes,no,1.0.5; Mercedes COMAND fix promised
 Live Activity on the Lock Screen while casting,casting,could,yes,no,
 In-app Help & FAQ,help,could,yes,no,S13; Torpido has a short how-it-works section

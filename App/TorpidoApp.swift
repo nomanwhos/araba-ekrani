@@ -27,7 +27,10 @@ struct TorpidoApp: App {
         }
         .onChange(of: scenePhase) { _, phase in
             // The listener may have been torn down while suspended.
-            if phase == .active { MirrorServer.shared.start() }
+            guard phase == .active else { return }
+            MirrorServer.shared.start()
+            // Rate-limited inside; usually checks nothing on a quick return to the app.
+            Task.detached(priority: .background) { await HealthChecker(database: .shared).run() }
         }
     }
 }
