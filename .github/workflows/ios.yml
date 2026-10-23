@@ -5,15 +5,22 @@ on:
     branches: [main]
   pull_request:
   workflow_dispatch:
+    inputs:
+      carplay:
+        description: "Include the CarPlay entitlement (only after Apple granted it)"
+        type: boolean
+        default: false
 
 jobs:
   build-test-screenshot:
+    # Manual runs are for TestFlight; pushes and PRs run the tests.
+    if: github.event_name != 'workflow_dispatch'
     runs-on: macos-latest
     timeout-minutes: 30
     permissions:
       contents: write
     env:
-      BUNDLE_ID: com.example.torpido
+      BUNDLE_ID: com.nomanwhos.torpido
     steps:
       - uses: actions/checkout@v4
 
@@ -100,3 +107,55 @@ jobs:
           path: |
             .impeccable/review
             xcodebuild.log
+
+  testflight:
+    # Actions > iOS > Run workflow. Needs repository secrets ASC_KEY_ID, ASC_ISSUER_ID, ASC_KEY_P8
+    # (an App Store Connect API key with the App Manager role). Signing is automatic.
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: macos-latest
+    timeout-minutes: 45
+    env:
+      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+      ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check the API key secrets exist
+        run: |
+          for name in ASC_KEY_ID ASC_ISSUER_ID ASC_KEY_P8; do
+            if [ -z "${!name}" ]; then echo "::error::Repository secret $name is missing"; exit 1; fi
+          done
+
+      - name: Generate Xcode project
+        run: |
+          brew install xcodegen
+          xcodegen generate
+
+      - name: Archive (signed, automatic provisioning)
+        run: |
+          set -o pipefail
+          KEY="$RUNNER_TEMP/AuthKey.p8"
+          printf '%s' "$ASC_KEY_P8" > "$KEY"
+          ENTITLEMENTS=()
+          if [ "${{ inputs.carplay }}" != "true" ]; then
+            ENTITLEMENTS=(CODE_SIGN_ENTITLEMENTS=App/Torpido-NoCarPlay.entitlements)
+          fi
+          xcodebuild archive \
+            -project Torpido.xcodeproj -scheme Torpido -configuration Release \
+            -destination "generic/platform=iOS" -archivePath "$RUNNER_TEMP/Torpido.xcarchive" \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath "$KEY" -authenticationKeyID "$ASC_KEY_ID" -authenticationKeyIssuerID "$ASC_ISSUER_ID" \
+            CURRENT_PROJECT_VERSION="$GITHUB_RUN_NUMBER" "${ENTITLEMENTS[@]}" \
+            > archive.log 2>&1 || { python3 scripts/ci_annotate.py archive.log; exit 1; }
+
+      - name: Upload to TestFlight
+        run: |
+          KEY="$RUNNER_TEMP/AuthKey.p8"
+          xcodebuild -exportArchive \
+            -archivePath "$RUNNER_TEMP/Torpido.xcarchive" -exportPath "$RUNNER_TEMP/export" \
+            -exportOptionsPlist scripts/ExportOptions.plist \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath "$KEY" -authenticationKeyID "$ASC_KEY_ID" -authenticationKeyIssuerID "$ASC_ISSUER_ID" \
+            > export.log 2>&1 || { python3 scripts/ci_annotate.py export.log; exit 1; }
+          rm -f "$KEY"

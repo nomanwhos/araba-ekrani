@@ -24,7 +24,7 @@ iPhone ekranı ──► Yayın eklentisi (ReplayKit) ──► 127.0.0.1:48621 
 
 - [x] Kod yazıldı: yayın eklentisi, CarPlay ekranı, telefon arayüzü, testler
 - [x] Bulutta derleme ve testler geçti
-- [ ] Apple Developer hesabı (yıllık 99$, sahibinin kararı)
+- [x] Apple Developer hesabı (Team ID 6UDRFAGF26)
 - [ ] CarPlay navigation izni Apple'dan alındı
 - [ ] Telefona kuruldu ve arabada denendi
 

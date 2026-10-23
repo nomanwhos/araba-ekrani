@@ -14,8 +14,9 @@ packages:
 settings:
   base:
     SWIFT_VERSION: "5.0"
-    BUNDLE_ID_PREFIX: com.example
-    DEVELOPMENT_TEAM: ""
+    BUNDLE_ID_PREFIX: com.nomanwhos
+    DEVELOPMENT_TEAM: 6UDRFAGF26
+    CODE_SIGN_STYLE: Automatic
     MARKETING_VERSION: "0.1.0"
     CURRENT_PROJECT_VERSION: "1"
     TARGETED_DEVICE_FAMILY: "1"
@@ -47,6 +48,7 @@ targets:
         UILaunchScreen:
           UIColorName: Night
         # Most IPTV streams and playlists are plain http. Personal build, not for the App Store.
+        ITSAppUsesNonExemptEncryption: false
         NSAppTransportSecurity:
           NSAllowsArbitraryLoads: true
         # Keeps sound playing from the mini player with the screen locked.

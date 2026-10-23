@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- Used for TestFlight builds until Apple grants the CarPlay entitlement:
+     signing fails if the app asks for a capability the team does not have. -->
+<plist version="1.0">
+<dict/>
+</plist>
