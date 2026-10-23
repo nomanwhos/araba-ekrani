@@ -271,7 +271,7 @@ final class DLNARenderer {
         case "SetVolume", "SetMute":
             return ok([]) // the phone's volume buttons own the volume
         case "GetProtocolInfo":
-            let sink = ["video/mp4", "video/quicktime", "video/x-m4v", "application/vnd.apple.mpegurl", "application/x-mpegURL",
+            let sink: String = ["video/mp4", "video/quicktime", "video/x-m4v", "application/vnd.apple.mpegurl", "application/x-mpegURL",
                         "video/mp2t", "audio/mpeg", "audio/mp4", "*"].map { "http-get:*:\($0):*" }.joined(separator: ",")
             return ok([("Source", ""), ("Sink", sink)])
         case "GetCurrentConnectionIDs":

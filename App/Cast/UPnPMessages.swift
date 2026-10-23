@@ -135,7 +135,7 @@ enum UPnP {
     ]
 
     static func deviceDescription(uuid: String, friendlyName: String) -> String {
-        let serviceList = services.map { s in
+        let serviceList: String = services.map { s in
             "<service><serviceType>\(s.type)</serviceType><serviceId>\(s.id)</serviceId>"
                 + "<SCPDURL>/\(s.path)/scpd.xml</SCPDURL><controlURL>/\(s.path)/control</controlURL>"
                 + "<eventSubURL>/\(s.path)/event</eventSubURL></service>"
@@ -153,12 +153,12 @@ enum UPnP {
 
     /// Service description: every action, every argument typed as a string.
     static func scpd(for service: Service) -> String {
-        let actions = service.actions.map { action in
+        let actions: String = service.actions.map { action -> String in
             let args = action.inArgs.map { arg("\($0)", "in") } + action.outArgs.map { arg("\($0)", "out") }
             return "<action><name>\(action.name)</name><argumentList>\(args.joined())</argumentList></action>"
         }.joined()
         let names = Set(service.actions.flatMap { $0.inArgs + $0.outArgs })
-        let variables = names.sorted().map {
+        let variables: String = names.sorted().map {
             "<stateVariable sendEvents=\"no\"><name>A_ARG_TYPE_\($0)</name><dataType>string</dataType></stateVariable>"
         }.joined()
         return """
@@ -173,7 +173,7 @@ enum UPnP {
     }
 
     static func soapResponse(action: String, serviceType: String, values: [(String, String)] = []) -> String {
-        let body = values.map { "<\($0.0)>\(XML.escape($0.1))</\($0.0)>" }.joined()
+        let body: String = values.map { "<\($0.0)>\(XML.escape($0.1))</\($0.0)>" }.joined()
         return """
         <?xml version="1.0" encoding="utf-8"?>
         <s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">\
