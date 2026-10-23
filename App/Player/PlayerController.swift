@@ -22,6 +22,7 @@ struct NowPlaying: Equatable {
     var title: String
     var channel: Channel?
     var serverItem: ServerItem?
+    var localVideoID: String?
 }
 
 /// Owns the one AVPlayer: what is playing, whether the full player is open,
@@ -65,6 +66,15 @@ final class PlayerController {
         let resume = try? PlaybackPositionStore(database: database).resumePosition(for: channel)
         start(NowPlaying(title: channel.name, channel: channel), url: url, resume: resume,
               missingMessage: "Bu kanalın oynatılabilir bir adresi yok.")
+    }
+
+    /// A video imported into the app; plays offline and resumes where it stopped.
+    func play(_ video: LocalVideo) {
+        let url = LocalVideoStore(database: database).fileURL(for: video)
+        let resume = try? PlaybackPositionStore(database: database).resumePosition(kind: .local, key: video.id)
+        start(NowPlaying(title: video.displayName, localVideoID: video.id),
+              url: FileManager.default.fileExists(atPath: url.path) ? url : nil, resume: resume,
+              missingMessage: "Video dosyası bulunamadı. Videolar listesinden silip yeniden içe aktarın.")
     }
 
     /// A movie or episode from the owner's Jellyfin server.
@@ -140,10 +150,11 @@ final class PlayerController {
         guard let nowPlaying, let item = player.currentItem else { return }
         let position = item.currentTime().seconds
         guard position.isFinite else { return }
+        let duration = item.duration.seconds.isFinite ? item.duration.seconds : nil
         if let channel = nowPlaying.channel {
-            let duration = item.duration.seconds
-            try? PlaybackPositionStore(database: database)
-                .save(channel: channel, position: position, duration: duration.isFinite ? duration : nil)
+            try? PlaybackPositionStore(database: database).save(channel: channel, position: position, duration: duration)
+        } else if let videoID = nowPlaying.localVideoID {
+            try? PlaybackPositionStore(database: database).save(kind: .local, key: videoID, position: position, duration: duration)
         } else {
             report(.progress)
         }

@@ -42,6 +42,7 @@ struct SettingsView: View {
                         Note(text: "Ses, telefondaki uygulamadan arabaya her zamanki gibi gelir.", symbol: "speaker.wave.2")
                         Note(text: "Araba ekranında kısa bir gecikme olabilir.", symbol: "timer")
                         Note(text: "Araba ekranına dokunmak telefonu kontrol etmez.", symbol: "hand.tap")
+                        Note(text: "Netflix, Prime Video gibi korumalı videolar yansıtmada siyah görünür; bu, o servislerin koruması.", symbol: "lock.shield")
                     }
 
                     Section("Hakkında") {

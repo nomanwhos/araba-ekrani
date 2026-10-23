@@ -101,3 +101,16 @@ struct PlaybackPosition: SnakeCaseRecord, Equatable {
     var durationS: Double?
     var updatedAt: Int64
 }
+
+struct LocalVideo: SnakeCaseRecord, Identifiable, Equatable, Hashable {
+    static let databaseTableName = "local_videos"
+
+    var id: String
+    var fileName: String
+    var displayName: String
+    var folder: String
+    var sortOrder: Int
+    var byteSize: Int64
+    var durationS: Double?
+    var importedAt: Int64
+}

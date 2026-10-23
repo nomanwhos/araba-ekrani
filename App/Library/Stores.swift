@@ -139,6 +139,7 @@ enum OrphanCleanup {
                 DELETE FROM \(table) WHERE item_kind = 'channel'
                 AND item_key NOT IN (SELECT source_id || ':' || stable_key FROM channels)
                 """)
+            try db.execute(sql: "DELETE FROM \(table) WHERE item_kind = 'local' AND item_key NOT IN (SELECT id FROM local_videos)")
         }
     }
 }
@@ -204,18 +205,26 @@ struct PlaybackPositionStore {
     let database: AppDatabase
 
     func save(channel: Channel, position: Double, duration: Double?) throws {
+        try save(kind: .channel, key: channel.itemKey, position: position, duration: duration)
+    }
+
+    func resumePosition(for channel: Channel) throws -> Double? {
+        try resumePosition(kind: .channel, key: channel.itemKey)
+    }
+
+    func save(kind: Favorite.ItemKind, key: String, position: Double, duration: Double?) throws {
         try database.writer.write { db in
-            try PlaybackPosition(itemKind: .channel, itemKey: channel.itemKey, positionS: max(0, position),
+            try PlaybackPosition(itemKind: kind, itemKey: key, positionS: max(0, position),
                                  durationS: duration, updatedAt: Clock.now()).upsert(db)
         }
     }
 
     /// Where to start: the saved position for on-demand video, nil for live
     /// streams, near-zero positions and finished videos.
-    func resumePosition(for channel: Channel) throws -> Double? {
+    func resumePosition(kind: Favorite.ItemKind, key: String) throws -> Double? {
         try database.reader.read { db in
             guard let saved = try PlaybackPosition
-                .filter(Column("item_kind") == "channel" && Column("item_key") == channel.itemKey)
+                .filter(Column("item_kind") == kind.rawValue && Column("item_key") == key)
                 .fetchOne(db),
                 let duration = saved.durationS
             else { return nil }

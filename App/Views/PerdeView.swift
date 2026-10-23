@@ -39,6 +39,21 @@ struct PerdeView: View {
                     Text("Sadece yolcuyken ya da araç park halindeyken kullanın. Araç kullanırken izlemeyin.")
                 }
                 .listRowBackground(Theme.surface)
+
+                Section {
+                    NavigationLink {
+                        BrowserView()
+                    } label: {
+                        Label {
+                            Text("Tarayıcı")
+                        } icon: {
+                            Image(systemName: "safari").foregroundStyle(.secondary)
+                        }
+                    }
+                } footer: {
+                    Text("YouTube gibi siteleri Torpido'da açın; perdeyle arabaya yansıtın.")
+                }
+                .listRowBackground(Theme.surface)
             }
             .nightGround()
             .navigationTitle("Torpido")
