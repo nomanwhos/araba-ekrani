@@ -68,7 +68,8 @@ final class TorpidoUITests: XCTestCase {
     /// Accessibility audit on every tab: contrast, clipped text, labels, hit regions, traits.
     /// Dynamic Type is covered by the accessibility-size screenshots instead
     /// (see replica/bugs.md, "to check"). Elements scrolled under the translucent
-    /// tab bar are skipped: the audit measures them through the glass.
+    /// tab bar, or in the scroll-edge blur just above it, are skipped: the audit
+    /// measures them through the glass.
     func testAccessibilityAuditOnEveryTab() throws {
         launch(seeded: true)
         var issues: [String] = []
@@ -76,7 +77,10 @@ final class TorpidoUITests: XCTestCase {
                                                   .sufficientElementDescription, .hitRegion, .trait]
         for name in ["Ana Sayfa", "Favoriler", "Perde", "Ayarlar"] {
             tab(name).tap()
-            let tabBarTop = app.tabBars.firstMatch.exists ? app.tabBars.firstMatch.frame.minY : .greatestFiniteMagnitude
+            // iOS 26 softens content in a band above the tab bar (scroll-edge effect).
+            let scrollEdgeBand: CGFloat = 44
+            let tabBarTop = app.tabBars.firstMatch.exists
+                ? app.tabBars.firstMatch.frame.minY - scrollEdgeBand : .greatestFiniteMagnitude
             try app.performAccessibilityAudit(for: checks) { issue in
                 // Unattributable findings (no element) cannot be located or fixed; listed in bugs.md "to check".
                 guard let flagged = issue.element else { return true }

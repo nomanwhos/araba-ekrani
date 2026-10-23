@@ -45,7 +45,7 @@ struct PerdeView: View {
                         BrowserView()
                     } label: {
                         Label {
-                            Text("Tarayıcı")
+                            Text("Tarayıcı").foregroundStyle(Theme.text)
                         } icon: {
                             Image(systemName: "safari").foregroundStyle(.secondary)
                         }
@@ -54,7 +54,7 @@ struct PerdeView: View {
                         CastGuideView()
                     } label: {
                         Label {
-                            Text("Uygulamadan gönder")
+                            Text("Uygulamadan gönder").foregroundStyle(Theme.text)
                         } icon: {
                             Image(systemName: "airplayvideo").foregroundStyle(.secondary)
                         }
