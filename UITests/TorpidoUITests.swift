@@ -79,8 +79,10 @@ final class TorpidoUITests: XCTestCase {
             let tabBarTop = app.tabBars.firstMatch.exists ? app.tabBars.firstMatch.frame.minY : .greatestFiniteMagnitude
             try app.performAccessibilityAudit(for: checks) { issue in
                 // Unattributable findings (no element) cannot be located or fixed; listed in bugs.md "to check".
-                guard let frame = issue.element?.frame else { return true }
-                if frame.maxY > tabBarTop { return true }
+                guard let element = issue.element else { return true }
+                if element.frame.maxY > tabBarTop { return true }
+                // The system search field (.searchable) draws its own placeholder; listed in bugs.md "to check".
+                if element.elementType == .searchField { return true }
                 let element = issue.element.map { "\($0.elementType) '\($0.label)'" } ?? "?"
                 issues.append("\(name): \(issue.compactDescription) on \(element)")
                 return true
