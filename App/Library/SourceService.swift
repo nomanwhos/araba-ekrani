@@ -35,7 +35,7 @@ struct SourceService {
     /// first download the source is not kept.
     func addM3U(urlText: String, name: String) async throws -> Source {
         guard let url = Self.playlistURL(from: urlText) else { throw SourceError.invalidURL }
-        let entries = try await download(url)
+        let entries = CredentialStripper.strip(try await download(url), using: CredentialStripper.credentials(in: url))
         let store = SourceStore(database: database)
         let source = try store.createM3U(url: url, name: name.isEmpty ? Self.defaultName(for: url) : name)
         return try importOrRollBack(entries, into: source)
@@ -75,7 +75,8 @@ struct SourceService {
             switch source.kind {
             case .m3u:
                 guard let url = store.playlistURL(for: source) else { throw SourceError.invalidURL }
-                _ = try PlaylistImporter(database: database).importEntries(try await download(url), into: source.id)
+                let entries = CredentialStripper.strip(try await download(url), using: CredentialStripper.credentials(in: url))
+                _ = try PlaylistImporter(database: database).importEntries(entries, into: source.id)
             case .xtream:
                 guard var client = store.xtreamClient(for: source) else { throw ServerError.authFailed }
                 client.http = http

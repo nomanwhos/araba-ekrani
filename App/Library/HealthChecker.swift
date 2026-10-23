@@ -47,16 +47,19 @@ struct HealthChecker {
     private func dueTargets(now: Int64) async throws -> [Target] {
         try await database.reader.read { db in
             try Row.fetchAll(db, sql: """
-                SELECT c.id, cs.url FROM channels c
+                SELECT c.id, c.source_id, cs.url FROM channels c
                 JOIN sources s ON s.id = c.source_id AND s.kind = 'm3u'
                 JOIN channel_streams cs ON cs.channel_id = c.id AND cs.position = 0
                 WHERE c.last_checked_at IS NULL OR c.last_checked_at <= ?
                 ORDER BY c.last_checked_at IS NOT NULL, c.last_checked_at
                 LIMIT ?
                 """, arguments: [now - Self.minInterval, Self.perRunLimit])
-            .compactMap { row in
-                URL(string: row["url"]).map { Target(channelID: row["id"], url: $0) }
-            }
+        }
+        .compactMap { row in
+            // Stored URLs may hold credential placeholders; fill them in memory only.
+            guard let stored = URL(string: row["url"]),
+                  let url = StreamResolver(database: database).playableURL(for: stored, sourceID: row["source_id"]) else { return nil }
+            return Target(channelID: row["id"], url: url)
         }
     }
 
