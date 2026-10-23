@@ -35,3 +35,5 @@ Resolved by migration v2: the FTS table is gone; search uses the folded `search_
 | S18 Search | 2026-10-22 | done | voice search | FTS5 dropped in migration v2: unicode61 cannot fold dotless ı, and the TEXT-keyed rowid risk goes away with it. A folded `search_name` column with LIKE (top 200) is simpler and fast enough |
 | S14 Player controls | 2026-10-22 | partial | stream switch, A/V offset | Fit/fill button added. Subtitles, audio tracks and speed come from the system player menu, not rebuilt. Two things are bigger than they looked: switching playback sources needs the importer to group same-channel URLs first, and AVPlayer has no audio offset for HLS, so A/V delay needs its own audio pipeline |
 | Health check job | 2026-10-23 | done | BGAppRefreshTask (runs on foreground only) | kept deliberately small and polite: M3U only, 80/run, 4 parallel, 3 s, 30 min per channel |
+
+2026-10-23: first run on the owner's iPhone (TestFlight build 41). The iptv-org Turkey M3U list imported, channels listed on Home and played. This is the first on-device confirmation of F01.
