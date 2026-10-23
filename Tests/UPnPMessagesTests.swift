@@ -71,7 +71,9 @@ final class UPnPMessagesTests: XCTestCase {
         XCTAssertTrue(xml.contains("<friendlyName>Torpido (iPhone)</friendlyName>"))
         XCTAssertTrue(xml.contains("<controlURL>/AVTransport/control</controlURL>"))
         let scpd = UPnP.scpd(for: UPnP.services[0])
-        XCTAssertTrue(scpd.contains("<name>SetAVTransportURI</name>"), String(scpd.prefix(600)))
+        let flat = scpd.replacingOccurrences(of: "\n", with: " ")
+        XCTAssertTrue(scpd.contains("<name>SetAVTransportURI</name>"),
+                      "actions=\(UPnP.services[0].actions.count) \(flat.prefix(700))")
     }
 
     func testTimeFormatRoundTrips() {
