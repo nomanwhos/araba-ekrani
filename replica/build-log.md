@@ -39,3 +39,4 @@ Resolved by migration v2: the FTS table is gone; search uses the folded `search_
 2026-10-23: first run on the owner's iPhone (TestFlight build 41). The iptv-org Turkey M3U list imported, channels listed on Home and played. This is the first on-device confirmation of F01.
 | S19 Local videos | 2026-10-23 | partial | drag reorder | Files and Photos import with a 500 MB free-space reserve; offline play with resume; rename/delete remove the file, the position and the favourite |
 | S07 Browser | 2026-10-23 | done | — | Netflix and Prime refuse browser playback on iPhone, and their DRM video comes out black when mirrored. Said plainly on the start page and in Ayarlar instead of promising it |
+| S06b Cast guide | 2026-10-23 | done | DLNA receiver (S06) waits for Apple's multicast entitlement, requested the same day | per-app route: own Cast (DLNA), Perde mirroring, or DRM-protected (black when mirrored). Copy written fresh, no logos |

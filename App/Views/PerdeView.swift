@@ -50,8 +50,17 @@ struct PerdeView: View {
                             Image(systemName: "safari").foregroundStyle(.secondary)
                         }
                     }
+                    NavigationLink {
+                        CastGuideView()
+                    } label: {
+                        Label {
+                            Text("Uygulamadan gönder")
+                        } icon: {
+                            Image(systemName: "airplayvideo").foregroundStyle(.secondary)
+                        }
+                    }
                 } footer: {
-                    Text("YouTube gibi siteleri Torpido'da açın; perdeyle arabaya yansıtın.")
+                    Text("YouTube gibi siteleri Torpido'da açın ya da hangi uygulamanın arabaya nasıl gideceğine bakın.")
                 }
                 .listRowBackground(Theme.surface)
             }
