@@ -10,15 +10,15 @@ enum SourceError: LocalizedError, Equatable {
     var errorDescription: String? {
         switch self {
         case .invalidURL:
-            "Bu bir bağlantı değil. http:// ya da https:// ile başlayan adresi yapıştırın."
-        case .downloadFailed(let status?):
-            "Liste indirilemedi (sunucu \(status) döndürdü). Bağlantının süresi dolmuş olabilir."
+            String(localized: "Bu bir bağlantı değil. http:// ya da https:// ile başlayan adresi yapıştırın.")
+        case .downloadFailed(let statusCode?):
+            String(localized: "Liste indirilemedi (sunucu \(statusCode) döndürdü). Bağlantının süresi dolmuş olabilir.")
         case .downloadFailed(nil):
-            "Liste indirilemedi. İnternet bağlantınızı ve adresi kontrol edin."
+            String(localized: "Liste indirilemedi. İnternet bağlantınızı ve adresi kontrol edin.")
         case .notAPlaylist:
-            "Bu adres bir kanal listesi değil: içeriği #EXTM3U ile başlamıyor."
+            String(localized: "Bu adres bir kanal listesi değil: içeriği #EXTM3U ile başlamıyor.")
         case .empty:
-            "Liste indirildi ama içinde oynatılabilir kanal yok."
+            String(localized: "Liste indirildi ama içinde oynatılabilir kanal yok.")
         }
     }
 }
@@ -140,6 +140,6 @@ struct SourceService {
     }
 
     static func defaultName(for url: URL) -> String {
-        url.host ?? "Kanal listesi"
+        url.host ?? String(localized: "Kanal listesi")
     }
 }

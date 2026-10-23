@@ -8,20 +8,20 @@ enum SourceKind: String, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .m3u: "M3U listesi"
-        case .xtream: "Xtream hesabı"
-        case .jellyfin: "Jellyfin"
-        case .emby: "Emby"
-        case .plex: "Plex"
+        case .m3u: String(localized: "M3U listesi")
+        case .xtream: String(localized: "Xtream hesabı")
+        case .jellyfin: String(localized: "Jellyfin")
+        case .emby: String(localized: "Emby")
+        case .plex: String(localized: "Plex")
         }
     }
 
     var detail: String {
         switch self {
-        case .m3u: "Bağlantıyı yapıştırın ya da QR kodunu okutun"
-        case .xtream: "Sunucu adresi, kullanıcı adı ve şifre"
-        case .jellyfin, .emby: "Kendi sunucunuzun adresi ve hesabınız"
-        case .plex: "Plex hesabınızla giriş"
+        case .m3u: String(localized: "Bağlantıyı yapıştırın ya da QR kodunu okutun")
+        case .xtream: String(localized: "Sunucu adresi, kullanıcı adı ve şifre")
+        case .jellyfin, .emby: String(localized: "Kendi sunucunuzun adresi ve hesabınız")
+        case .plex: String(localized: "Plex hesabınızla giriş")
         }
     }
 

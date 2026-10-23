@@ -75,7 +75,7 @@ struct BrowserView: View {
             }
         }
         .background(Theme.bg)
-        .navigationTitle(model.title.isEmpty ? "Tarayıcı" : model.title)
+        .navigationTitle(model.title.isEmpty ? String(localized: "Tarayıcı") : model.title)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar { toolbar }
         .onChange(of: model.currentURL) { _, url in
@@ -146,14 +146,14 @@ struct BrowserView: View {
                 Image(systemName: model.isLoading ? "xmark" : "arrow.clockwise")
             }
             .disabled(model.currentURL == nil)
-            .accessibilityLabel(model.isLoading ? "Durdur" : "Yenile")
+            .accessibilityLabel(LocalizedStringKey(model.isLoading ? "Durdur" : "Yenile"))
             Button {
                 if let url = model.currentURL { try? BookmarkStore(database: .shared).toggle(url: url, title: model.title) }
             } label: {
                 Image(systemName: isBookmarked ? "bookmark.fill" : "bookmark")
             }
             .disabled(model.currentURL == nil)
-            .accessibilityLabel(isBookmarked ? "Yer iminden çıkar" : "Yer imi ekle")
+            .accessibilityLabel(LocalizedStringKey(isBookmarked ? "Yer iminden çıkar" : "Yer imi ekle"))
         }
     }
 

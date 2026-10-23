@@ -25,7 +25,7 @@ struct GroupView: View {
                         Button {
                             try? FavoritesStore(database: .shared).toggle(channel)
                         } label: {
-                            Label(isFavorite ? "Çıkar" : "Favori", systemImage: isFavorite ? "star.slash" : "star")
+                            Label(LocalizedStringKey(isFavorite ? "Çıkar" : "Favori"), systemImage: isFavorite ? "star.slash" : "star")
                         }
                         .tint(Theme.accent)
                     }

@@ -36,7 +36,7 @@ struct PlayerScreen: View {
                         .font(.headline)
                         .frame(width: Theme.Size.tapMin, height: Theme.Size.tapMin)
                 }
-                .accessibilityLabel(controller.fillsScreen ? "Görüntüyü sığdır" : "Görüntüyü ekrana doldur")
+                .accessibilityLabel(LocalizedStringKey(controller.fillsScreen ? "Görüntüyü sığdır" : "Görüntüyü ekrana doldur"))
 
                 if let isFavorite {
                     Button(action: toggleFavorite) {
@@ -45,7 +45,7 @@ struct PlayerScreen: View {
                             .foregroundStyle(isFavorite ? Theme.accent : Theme.text)
                             .frame(width: Theme.Size.tapMin, height: Theme.Size.tapMin)
                     }
-                    .accessibilityLabel(isFavorite ? "Favorilerden çıkar" : "Favorilere ekle")
+                    .accessibilityLabel(LocalizedStringKey(isFavorite ? "Favorilerden çıkar" : "Favorilere ekle"))
                 }
             }
             .foregroundStyle(Theme.text)

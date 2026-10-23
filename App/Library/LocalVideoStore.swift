@@ -8,8 +8,8 @@ enum LocalVideoError: LocalizedError, Equatable {
 
     var errorDescription: String? {
         switch self {
-        case .notEnoughSpace(let needed): "Telefonda yer yok: bu video için yaklaşık \(needed) MB gerekiyor."
-        case .unreadable: "Video okunamadı. Dosya bozuk olabilir ya da iCloud'dan henüz inmemiş olabilir."
+        case .notEnoughSpace(let needed): String(localized: "Telefonda yer yok: bu video için yaklaşık \(needed) MB gerekiyor.")
+        case .unreadable: String(localized: "Video okunamadı. Dosya bozuk olabilir ya da iCloud'dan henüz inmemiş olabilir.")
         }
     }
 }

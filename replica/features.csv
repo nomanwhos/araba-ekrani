@@ -43,6 +43,6 @@ Redemption codes and restore purchases,monetisation,skip,yes,skip,no payments
 Creator referral / partner program,monetisation,skip,yes,skip,marketing for a paid app; personal app sells nothing
 Ads attribution and analytics (Adjust / Meta / Umeng / FirstFew),privacy,skip,yes,skip,PRODUCT.md: no tracking
 Remote announcements and settings server,backend,skip,yes,skip,no network calls the owner did not ask for
-22 UI languages with a language picker,settings,skip,yes,skip,Turkish UI is enough for one owner
+22 UI languages with a language picker,settings,skip,yes,partial,"Turkish + English (178 strings); per-app language via iPhone Settings, Ayarlar › Dil opens it; CI fails on a missing translation"
 Bundled channels or content,content,skip,no,skip,none; DEBUG seed is synthetic names on Apple test streams
 CarTV name / hero art / copy / green brand,brand,skip,yes,skip,Torpido has its own identity (DESIGN.md)

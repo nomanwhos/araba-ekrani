@@ -45,6 +45,19 @@ struct SettingsView: View {
                         Note(text: "Netflix, Prime Video gibi korumalı videolar yansıtmada siyah görünür; bu, o servislerin koruması.", symbol: "lock.shield")
                     }
 
+                    Section {
+                        Button {
+                            if let url = URL(string: UIApplication.openSettingsURLString) { UIApplication.shared.open(url) }
+                        } label: {
+                            LabeledContent("Dil") {
+                                Text(Locale.current.localizedString(forLanguageCode: Locale.current.language.languageCode?.identifier ?? "tr") ?? "")
+                            }
+                        }
+                        .foregroundStyle(Theme.text)
+                    } footer: {
+                        Text("Uygulamanın dilini iPhone Ayarları'nda değiştirin.")
+                    }
+
                     Section("Hakkında") {
                         LabeledContent("Sürüm", value: Self.version)
                     }
@@ -62,7 +75,7 @@ struct SettingsView: View {
 
 private struct Step: View {
     let number: Int
-    let text: String
+    let text: LocalizedStringKey
 
     var body: some View {
         Label {
@@ -75,7 +88,7 @@ private struct Step: View {
 }
 
 private struct Note: View {
-    let text: String
+    let text: LocalizedStringKey
     let symbol: String
 
     var body: some View {

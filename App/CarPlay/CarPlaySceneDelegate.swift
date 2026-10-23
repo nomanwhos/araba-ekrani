@@ -53,7 +53,7 @@ final class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegat
     /// Lets the passenger switch between fitting and filling the car display.
     private func makeFillButton(for map: CPMapTemplate) -> CPBarButton {
         let fills = MirrorState.shared.fillsCarScreen
-        return CPBarButton(title: fills ? "Sığdır" : "Doldur") { _ in
+        return CPBarButton(title: fills ? String(localized: "Sığdır") : String(localized: "Doldur")) { _ in
             MainActor.assumeIsolated { MirrorState.shared.fillsCarScreen.toggle() }
         }
     }

@@ -72,17 +72,17 @@ struct MarqueeScreen: View {
 
     private var title: String {
         switch stage {
-        case .waitingForCar: "Arabaya bağlı değil"
-        case .ready: "Perde hazır"
-        case .live: "Yayında"
+        case .waitingForCar: String(localized: "Arabaya bağlı değil")
+        case .ready: String(localized: "Perde hazır")
+        case .live: String(localized: "Yayında")
         }
     }
 
     private var detail: String {
         switch stage {
-        case .waitingForCar: "iPhone'u CarPlay'e bağlayın. Torpido araba ekranında da açılır."
-        case .ready: "Aşağıdaki düğmeye dokunun, açılan pencerede Yayını Başlat'ı seçin."
-        case .live: "İzlemek istediğiniz uygulamaya geçin."
+        case .waitingForCar: String(localized: "iPhone'u CarPlay'e bağlayın. Torpido araba ekranında da açılır.")
+        case .ready: String(localized: "Aşağıdaki düğmeye dokunun, açılan pencerede Yayını Başlat'ı seçin.")
+        case .live: String(localized: "İzlemek istediğiniz uygulamaya geçin.")
         }
     }
 

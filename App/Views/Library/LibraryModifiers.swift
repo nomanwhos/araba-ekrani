@@ -12,7 +12,7 @@ extension View {
             Button {
                 try? FavoritesStore(database: .shared).toggle(channel)
             } label: {
-                Label(isFavorite ? "Favorilerden çıkar" : "Favorilere ekle", systemImage: isFavorite ? "star.slash" : "star")
+                Label(LocalizedStringKey(isFavorite ? "Favorilerden çıkar" : "Favorilere ekle"), systemImage: isFavorite ? "star.slash" : "star")
             }
         }
     }

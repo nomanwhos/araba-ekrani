@@ -4,9 +4,9 @@ import SwiftUI
 /// what is missing, one line on how to fix it, and at most one action.
 struct EmptyState: View {
     let symbol: String
-    let title: String
-    let message: String
-    var actionTitle: String?
+    let title: LocalizedStringKey
+    let message: LocalizedStringKey
+    var actionTitle: LocalizedStringKey?
     var action: (() -> Void)?
 
     var body: some View {

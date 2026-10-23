@@ -44,7 +44,7 @@ final class MirrorServer {
                 // iOS can tear the listener down while the app is suspended; rebuild it.
                 listener?.cancel()
                 self.listener = nil
-                self.publish { $0.serverError = "Alıcı başlatılamadı: \(error.localizedDescription)" }
+                self.publish { $0.serverError = String(localized: "Alıcı başlatılamadı: \(error.localizedDescription)") }
                 self.queue.asyncAfter(deadline: .now() + Self.restartDelay) { [weak self] in
                     self?.startListener()
                 }
@@ -53,7 +53,7 @@ final class MirrorServer {
             self.listener = listener
             publish { $0.serverError = nil }
         } catch {
-            publish { $0.serverError = "Alıcı başlatılamadı: \(error.localizedDescription)" }
+            publish { $0.serverError = String(localized: "Alıcı başlatılamadı: \(error.localizedDescription)") }
         }
     }
 

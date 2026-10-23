@@ -37,7 +37,7 @@ struct MediaBrowserView: View {
             ProgressView()
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
         case .failed(let message):
-            EmptyState(symbol: "exclamationmark.triangle", title: "Sunucu açılmadı", message: message,
+            EmptyState(symbol: "exclamationmark.triangle", title: "Sunucu açılmadı", message: LocalizedStringKey(message),
                        actionTitle: "Tekrar dene") { Task { await fetch() } }
                 .frame(maxHeight: .infinity)
         case .loaded(let items) where items.isEmpty:
@@ -68,7 +68,7 @@ struct MediaBrowserView: View {
 
     private func fetch() async {
         guard let client = SourceStore(database: .shared).jellyfinClient(for: route.source) else {
-            load = .failed("Sunucu oturumu bulunamadı. Ayarlar › Kaynaklar'dan sunucuyu silip yeniden ekleyin.")
+            load = .failed(String(localized: "Sunucu oturumu bulunamadı. Ayarlar › Kaynaklar'dan sunucuyu silip yeniden ekleyin."))
             return
         }
         do {
@@ -126,7 +126,7 @@ private struct MediaRow: View {
                 .formatted(.units(allowed: [.hours, .minutes], width: .abbreviated)))
         }
         if let resume = item.resumeSeconds {
-            parts.append(Duration.seconds(resume).formatted(.units(allowed: [.hours, .minutes], width: .abbreviated)) + " izlendi")
+            parts.append(Duration.seconds(resume).formatted(.units(allowed: [.hours, .minutes], width: .abbreviated)) + String(localized: " izlendi"))
         }
         return parts.isEmpty ? nil : parts.joined(separator: " · ")
     }

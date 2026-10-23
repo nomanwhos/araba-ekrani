@@ -86,7 +86,7 @@ struct SourcesView: View {
         do {
             try SourceStore(database: .shared).remove(source)
         } catch {
-            message = "Silinemedi: \(error.localizedDescription)"
+            message = String(localized: "Silinemedi: \(error.localizedDescription)")
         }
     }
 }
@@ -114,8 +114,8 @@ private struct SourceRow: View {
 
     private var status: String {
         if source.status == .failed, let error = source.lastError { return error }
-        guard let refreshed = source.lastRefreshedAt else { return "Henüz indirilmedi" }
+        guard let refreshed = source.lastRefreshedAt else { return String(localized: "Henüz indirilmedi") }
         let date = Date(timeIntervalSince1970: TimeInterval(refreshed))
-        return "Güncellendi: " + date.formatted(.relative(presentation: .named))
+        return String(localized: "Güncellendi: ") + date.formatted(.relative(presentation: .named))
     }
 }

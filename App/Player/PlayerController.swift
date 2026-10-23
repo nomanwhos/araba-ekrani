@@ -65,7 +65,7 @@ final class PlayerController {
         let url = stored.flatMap { StreamResolver(database: database).playableURL(for: $0, sourceID: channel.sourceId) }
         let resume = try? PlaybackPositionStore(database: database).resumePosition(for: channel)
         start(NowPlaying(title: channel.name, channel: channel), url: url, resume: resume,
-              missingMessage: "Bu kanalın oynatılabilir bir adresi yok.")
+              missingMessage: String(localized: "Bu kanalın oynatılabilir bir adresi yok."))
     }
 
     /// A video imported into the app; plays offline and resumes where it stopped.
@@ -74,7 +74,7 @@ final class PlayerController {
         let resume = try? PlaybackPositionStore(database: database).resumePosition(kind: .local, key: video.id)
         start(NowPlaying(title: video.displayName, localVideoID: video.id),
               url: FileManager.default.fileExists(atPath: url.path) ? url : nil, resume: resume,
-              missingMessage: "Video dosyası bulunamadı. Videolar listesinden silip yeniden içe aktarın.")
+              missingMessage: String(localized: "Video dosyası bulunamadı. Videolar listesinden silip yeniden içe aktarın."))
     }
 
     /// A movie or episode from the owner's Jellyfin server.
@@ -84,7 +84,7 @@ final class PlayerController {
         let url = client?.playbackURL(itemID: item.id, playSessionID: sessionID)
         let serverItem = NowPlaying.ServerItem(source: source, itemID: item.id, playSessionID: sessionID)
         start(NowPlaying(title: item.displayTitle, serverItem: serverItem), url: url, resume: item.resumeSeconds,
-              missingMessage: "Sunucu oturumu bulunamadı. Ayarlar › Kaynaklar'dan sunucuyu yeniden ekleyin.")
+              missingMessage: String(localized: "Sunucu oturumu bulunamadı. Ayarlar › Kaynaklar'dan sunucuyu yeniden ekleyin."))
         report(.started)
     }
 
@@ -120,7 +120,7 @@ final class PlayerController {
         let playerItem = AVPlayerItem(url: url)
         statusObservation = playerItem.observe(\.status) { [weak self] playerItem, _ in
             guard playerItem.status == .failed else { return }
-            Task { @MainActor in self?.failure = "Bu yayın açılmadı. Kaynak kapalı olabilir ya da biçimi desteklenmiyor." }
+            Task { @MainActor in self?.failure = String(localized: "Bu yayın açılmadı. Kaynak kapalı olabilir ya da biçimi desteklenmiyor.") }
         }
         player.replaceCurrentItem(with: playerItem)
         startSavingPosition()

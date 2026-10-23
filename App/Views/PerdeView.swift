@@ -81,7 +81,7 @@ struct PerdeView: View {
         Button {
             picker.present()
         } label: {
-            Label(state.isStreaming ? "Yansıtmayı Durdur" : "Yansıtmayı Başlat",
+            Label(LocalizedStringKey(state.isStreaming ? "Yansıtmayı Durdur" : "Yansıtmayı Başlat"),
                   systemImage: state.isStreaming ? "stop.fill" : "play.fill")
                 // At accessibility sizes the icon goes so the words wrap whole instead of hyphenating.
                 .labelStyle(dynamicTypeSize.isAccessibilitySize ? AnyLabelStyle(TitleOnlyLabelStyle()) : AnyLabelStyle(TitleAndIconLabelStyle()))
@@ -98,9 +98,9 @@ struct PerdeView: View {
 }
 
 private struct StatusRow: View {
-    let title: String
+    let title: LocalizedStringKey
     let symbol: String
-    let value: String
+    let value: LocalizedStringKey
     let isOn: Bool
 
     var body: some View {

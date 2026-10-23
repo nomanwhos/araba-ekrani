@@ -82,9 +82,9 @@ struct CastGuideView: View {
 
     private func summary(for route: CastGuideApp.Route) -> String {
         switch route {
-        case .dlna: "Kendi Gönder düğmesiyle (DLNA)"
-        case .mirror: "Perde ile yansıtın"
-        case .protected: "Korumalı: arabada görüntü siyah kalır"
+        case .dlna: String(localized: "Kendi Gönder düğmesiyle (DLNA)")
+        case .mirror: String(localized: "Perde ile yansıtın")
+        case .protected: String(localized: "Korumalı: arabada görüntü siyah kalır")
         }
     }
 }
@@ -137,17 +137,17 @@ private struct CastGuideDetail: View {
     private var steps: [String] {
         switch app.route {
         case .mirror:
-            ["Önce Perde'de Yansıtmayı Başlat'a dokunun.",
-             "\(app.name) uygulamasını açıp videoyu oynatın; telefon ekranı arabada görünür.",
-             "Ses telefondan arabaya her zamanki gibi gelir."]
+            [String(localized: "Önce Perde'de Yansıtmayı Başlat'a dokunun."),
+             String(localized: "\(app.name) uygulamasını açıp videoyu oynatın; telefon ekranı arabada görünür."),
+             String(localized: "Ses telefondan arabaya her zamanki gibi gelir.")]
         case .dlna:
-            ["\(app.name) uygulamasında videoyu açıp Gönder (Cast) düğmesine dokunun.",
-             "Listeden Torpido'yu seçin. Bu adım Apple'ın ağ izni geldikten sonra çalışacak.",
-             "O zamana kadar Perde ile yansıtabilirsiniz."]
+            [String(localized: "\(app.name) uygulamasında videoyu açıp Gönder (Cast) düğmesine dokunun."),
+             String(localized: "Listeden Torpido'yu seçin. Bu adım Apple'ın ağ izni geldikten sonra çalışacak."),
+             String(localized: "O zamana kadar Perde ile yansıtabilirsiniz.")]
         case .protected:
-            ["\(app.name) videolarını kopya korumasıyla (DRM) gönderir.",
-             "Ekran yansıtmada görüntü siyah, ses açık kalır; bu, servisin kuralı.",
-             "Arabada izlemek için videoyu \(app.name) uygulamasından indirip telefonda izleyin."]
+            [String(localized: "\(app.name) videolarını kopya korumasıyla (DRM) gönderir."),
+             String(localized: "Ekran yansıtmada görüntü siyah, ses açık kalır; bu, servisin kuralı."),
+             String(localized: "Arabada izlemek için videoyu \(app.name) uygulamasından indirip telefonda izleyin.")]
         }
     }
 }

@@ -92,7 +92,7 @@ struct XtreamClient {
         return try await streams.compactMap { stream in
             guard let url = URL(string: "xtream:live/\(stream.streamID).\(account.streamExtension)") else { return nil }
             return PlaylistEntry(
-                name: stream.name.isEmpty ? "Kanal \(stream.streamID)" : stream.name,
+                name: stream.name.isEmpty ? String(localized: "Kanal \(stream.streamID)") : stream.name,
                 group: stream.categoryID.flatMap { names[$0] },
                 logoURL: stream.icon.flatMap { $0.isEmpty ? nil : URL(string: $0) },
                 tvgID: stream.epgID.flatMap { $0.isEmpty ? nil : $0 },

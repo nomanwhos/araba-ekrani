@@ -89,7 +89,7 @@ private final class CarIdleView: UIView {
         title.font = UIFont.systemFont(ofSize: 34, weight: .black, width: .expanded)
 
         let hint = UILabel()
-        hint.text = "Telefonda Torpido'yu açın ve Yansıtmayı Başlat'a dokunun."
+        hint.text = String(localized: "Telefonda Torpido'yu açın ve Yansıtmayı Başlat'a dokunun.")
         hint.textColor = UIColor(white: 1, alpha: 0.78)
         hint.font = UIFont.systemFont(ofSize: 20, weight: .semibold)
         hint.numberOfLines = 0

@@ -70,7 +70,7 @@ struct HomeView: View {
             ProgressView()
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
         case .failed(let message):
-            EmptyState(symbol: "exclamationmark.triangle", title: "Kanallar okunamadı", message: message)
+            EmptyState(symbol: "exclamationmark.triangle", title: "Kanallar okunamadı", message: LocalizedStringKey(message))
                 .frame(maxHeight: .infinity)
         case .loaded(0, _, _, _):
             EmptyState(symbol: "tv", title: "Henüz kanal yok",

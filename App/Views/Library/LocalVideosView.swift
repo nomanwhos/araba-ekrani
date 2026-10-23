@@ -143,7 +143,7 @@ struct LocalVideosView: View {
                     return
                 }
                 defer { try? FileManager.default.removeItem(at: movie.url) }
-                _ = try await store.importVideo(from: movie.url, suggestedName: "Fotoğraflar videosu")
+                _ = try await store.importVideo(from: movie.url, suggestedName: String(localized: "Fotoğraflar videosu"))
             } catch {
                 message = error.localizedDescription
             }

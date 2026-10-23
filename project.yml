@@ -2,6 +2,8 @@
 # Set BUNDLE_ID_PREFIX and DEVELOPMENT_TEAM to your own Apple Developer values before a device build.
 name: Torpido
 options:
+  # Source strings are Turkish; English comes from App/Resources/en.lproj (scripts/l10n.py).
+  developmentLanguage: tr
   deploymentTarget:
     iOS: "18.0"
   createIntermediateGroups: true

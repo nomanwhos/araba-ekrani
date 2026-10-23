@@ -12,12 +12,12 @@ enum ServerError: LocalizedError, Equatable {
 
     var errorDescription: String? {
         switch self {
-        case .invalidServer: "Sunucu adresi geçersiz. http:// ya da https:// ile başlayan adresi yazın (örn. http://sunucu.com:8080)."
-        case .unreachable: "Sunucuya ulaşılamadı. Adresi, portu ve internet bağlantınızı kontrol edin."
-        case .authFailed: "Kullanıcı adı ya da şifre yanlış."
-        case .accountInactive(let status): "Hesap etkin değil (durum: \(status)). Sağlayıcınızla görüşün."
-        case .http(let code): "Sunucu bir hata döndürdü (\(code))."
-        case .unexpectedResponse: "Sunucunun yanıtı anlaşılamadı. Bu bir Xtream ya da Jellyfin sunucusu mu?"
+        case .invalidServer: String(localized: "Sunucu adresi geçersiz. http:// ya da https:// ile başlayan adresi yazın (örn. http://sunucu.com:8080).")
+        case .unreachable: String(localized: "Sunucuya ulaşılamadı. Adresi, portu ve internet bağlantınızı kontrol edin.")
+        case .authFailed: String(localized: "Kullanıcı adı ya da şifre yanlış.")
+        case .accountInactive(let status): String(localized: "Hesap etkin değil (durum: \(status)). Sağlayıcınızla görüşün.")
+        case .http(let statusCode): String(localized: "Sunucu bir hata döndürdü (\(statusCode)).")
+        case .unexpectedResponse: String(localized: "Sunucunun yanıtı anlaşılamadı. Bu bir Xtream ya da Jellyfin sunucusu mu?")
         }
     }
 }

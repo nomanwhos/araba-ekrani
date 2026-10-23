@@ -93,7 +93,7 @@ struct AddSourceView: View {
             SecureField("Şifre", text: $password)
                 .textContentType(.password)
         } header: {
-            Text(kind == .xtream ? "Xtream hesabı" : "Jellyfin sunucusu")
+            Text(LocalizedStringKey(kind == .xtream ? "Xtream hesabı" : "Jellyfin sunucusu"))
         } footer: {
             footer(hint: kind == .xtream
                    ? "Sağlayıcınızın verdiği sunucu adresi, kullanıcı adı ve şifre. Şifre yalnızca bu iPhone'un anahtar zincirinde durur."
@@ -103,7 +103,7 @@ struct AddSourceView: View {
     }
 
     @ViewBuilder
-    private func footer(hint: String) -> some View {
+    private func footer(hint: LocalizedStringKey) -> some View {
         if let error {
             Text(error).foregroundStyle(Theme.danger)
         } else {

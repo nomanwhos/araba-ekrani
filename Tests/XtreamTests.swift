@@ -73,7 +73,8 @@ final class XtreamTests: XCTestCase {
 
         let entries = try await client.playlistEntries(account: .init(streamExtension: "m3u8"))
 
-        XCTAssertEqual(entries.map(\.name), ["Haber 24", "Spor HD", "Kanal 303"])
+        XCTAssertEqual(entries.map(\.name).prefix(2), ["Haber 24", "Spor HD"])
+        XCTAssertTrue(entries[2].name.hasSuffix("303"), "an unnamed stream is named after its id")
         XCTAssertEqual(entries.map(\.group), ["Haber", "Spor", nil])
         XCTAssertEqual(entries[0].logoURL, URL(string: "http://logo.example/h.png"))
         XCTAssertNil(entries[1].logoURL)

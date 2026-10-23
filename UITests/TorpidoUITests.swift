@@ -11,7 +11,7 @@ final class TorpidoUITests: XCTestCase {
     }
 
     private func launch(seeded: Bool) {
-        app.launchArguments = ["-TorpidoReset", "1"] + (seeded ? ["-TorpidoSeed", "1"] : [])
+        app.launchArguments = ["-AppleLanguages", "(tr)", "-AppleLocale", "tr_TR", "-TorpidoReset", "1"] + (seeded ? ["-TorpidoSeed", "1"] : [])
         app.launch()
     }
 
