@@ -35,9 +35,25 @@ struct CastGuideApp: Identifiable, Hashable {
 /// S06 / S06b: which apps can reach the car screen, and how.
 struct CastGuideView: View {
     @State private var selected: CastGuideApp?
+    private let receiver = DLNARenderer.shared
 
     var body: some View {
         List {
+            Section {
+                Toggle(isOn: Binding(get: { receiver.isOn }, set: { receiver.setEnabled($0) })) {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Alıcı")
+                        Text(receiverStatus)
+                            .font(.footnote)
+                            .foregroundStyle(receiver.problem == nil ? Theme.textMutedOnSurface : Theme.danger)
+                    }
+                }
+                .frame(minHeight: Theme.Size.tapMin)
+            } footer: {
+                Text("Açıkken Torpido, aynı Wi-Fi ağındaki VLC, Plex gibi uygulamaların Gönder listesinde “Torpido (iPhone)” adıyla görünür. Arka planda da dinler; bunun için sessiz bir ses oturumu açık kalır ve pil biraz daha hızlı biter.")
+            }
+            .listRowBackground(Theme.surface)
+
             Section {
                 ForEach(CastGuideApp.all) { app in
                     Button {
@@ -59,7 +75,7 @@ struct CastGuideView: View {
                     }
                 }
             } footer: {
-                Text("Torpido'nun alıcı olarak görünmesi (DLNA) Apple'ın ağ iznini bekliyor. O zamana kadar her uygulama Perde ile yansıtılabilir; korumalı olanlar hariç.")
+                Text("Gönder düğmesi olmayan uygulamalar Perde ile yansıtılabilir; korumalı olanlar hariç.")
             }
             .listRowBackground(Theme.surface)
         }
@@ -70,6 +86,13 @@ struct CastGuideView: View {
             CastGuideDetail(app: app)
                 .presentationDetents([.medium])
         }
+    }
+
+    private var receiverStatus: String {
+        if let problem = receiver.problem { return problem }
+        guard receiver.isOn else { return String(localized: "Kapalı") }
+        if let title = receiver.castTitle { return String(localized: "Oynatılıyor: \(title)") }
+        return String(localized: "Gönderilmesini bekliyor")
     }
 
     private func symbol(for route: CastGuideApp.Route) -> String {
@@ -142,8 +165,8 @@ private struct CastGuideDetail: View {
              String(localized: "Ses telefondan arabaya her zamanki gibi gelir.")]
         case .dlna:
             [String(localized: "\(app.name) uygulamasında videoyu açıp Gönder (Cast) düğmesine dokunun."),
-             String(localized: "Listeden Torpido'yu seçin. Bu adım Apple'ın ağ izni geldikten sonra çalışacak."),
-             String(localized: "O zamana kadar Perde ile yansıtabilirsiniz.")]
+             String(localized: "Listeden Torpido'yu seçin. Alıcı açık olmalı ve iPhone ile aynı Wi-Fi ağında olmalı."),
+             String(localized: "Video Torpido'da açılır; araba ekranında görmek için Perde'de yansıtmayı başlatın.")]
         case .protected:
             [String(localized: "\(app.name) videolarını kopya korumasıyla (DRM) gönderir."),
              String(localized: "Ekran yansıtmada görüntü siyah, ses açık kalır; bu, servisin kuralı."),

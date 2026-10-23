@@ -88,6 +88,11 @@ final class PlayerController {
         report(.started)
     }
 
+    /// A video another app sent to Torpido over DLNA. No resume, nothing saved.
+    func play(remote url: URL, title: String) {
+        start(NowPlaying(title: title), url: url, resume: nil, missingMessage: "")
+    }
+
     func togglePlayback() {
         isPlaying ? player.pause() : player.play()
     }

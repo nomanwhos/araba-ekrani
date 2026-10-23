@@ -12,6 +12,7 @@
 "Ad (isteğe bağlı)" = "Ad (isteğe bağlı)";
 "Adlandır" = "Adlandır";
 "Adres ya da arama" = "Adres ya da arama";
+"Alıcı" = "Alıcı";
 "Alıcı başlatılamadı: %@" = "Alıcı başlatılamadı: %@";
 "Ana Sayfa" = "Ana Sayfa";
 "Araba ekranı" = "Araba ekranı";
@@ -22,6 +23,8 @@
 "Ayarlar" = "Ayarlar";
 "Açık" = "Açık";
 "Açık kanal yok" = "Açık kanal yok";
+"Açıkken Torpido, aynı Wi-Fi ağındaki VLC, Plex gibi uygulamaların Gönder listesinde “Torpido (iPhone)” adıyla görünür. Arka planda da dinler; bunun için sessiz bir ses oturumu açık kalır ve pil biraz daha hızlı biter." = "Açıkken Torpido, aynı Wi-Fi ağındaki VLC, Plex gibi uygulamaların Gönder listesinde “Torpido (iPhone)” adıyla görünür. Arka planda da dinler; bunun için sessiz bir ses oturumu açık kalır ve pil biraz daha hızlı biter.";
+"Ağda görünme başlatılamadı: %@" = "Ağda görünme başlatılamadı: %@";
 "Aşağıdaki düğmeye dokunun, açılan pencerede Yayını Başlat'ı seçin." = "Aşağıdaki düğmeye dokunun, açılan pencerede Yayını Başlat'ı seçin.";
 "Bağlantıyı yapıştırın ya da QR kodunu okutun" = "Bağlantıyı yapıştırın ya da QR kodunu okutun";
 "Bağlı" = "Bağlı";
@@ -60,6 +63,8 @@
 "Geri" = "Geri";
 "Geçmişi temizle" = "Geçmişi temizle";
 "Gruptaki tüm kanalları gösterir" = "Gruptaki tüm kanalları gösterir";
+"Gönder düğmesi olmayan uygulamalar Perde ile yansıtılabilir; korumalı olanlar hariç." = "Gönder düğmesi olmayan uygulamalar Perde ile yansıtılabilir; korumalı olanlar hariç.";
+"Gönderilmesini bekliyor" = "Gönderilmesini bekliyor";
 "Görüntüyü ekrana doldur" = "Görüntüyü ekrana doldur";
 "Görüntüyü sığdır" = "Görüntüyü sığdır";
 "Güncellendi: " = "Güncellendi: ";
@@ -98,7 +103,7 @@
 "Liste indirildi ama içinde oynatılabilir kanal yok." = "Liste indirildi ama içinde oynatılabilir kanal yok.";
 "Liste indirilemedi (sunucu %lld döndürdü). Bağlantının süresi dolmuş olabilir." = "Liste indirilemedi (sunucu %lld döndürdü). Bağlantının süresi dolmuş olabilir.";
 "Liste indirilemedi. İnternet bağlantınızı ve adresi kontrol edin." = "Liste indirilemedi. İnternet bağlantınızı ve adresi kontrol edin.";
-"Listeden Torpido'yu seçin. Bu adım Apple'ın ağ izni geldikten sonra çalışacak." = "Listeden Torpido'yu seçin. Bu adım Apple'ın ağ izni geldikten sonra çalışacak.";
+"Listeden Torpido'yu seçin. Alıcı açık olmalı ve iPhone ile aynı Wi-Fi ağında olmalı." = "Listeden Torpido'yu seçin. Alıcı açık olmalı ve iPhone ile aynı Wi-Fi ağında olmalı.";
 "Listenin kanalları, favorileri ve kaldığınız yerler de silinir." = "Listenin kanalları, favorileri ve kaldığınız yerler de silinir.";
 "M3U bağlantınızı ekleyin; kanallar Ana Sayfa'da görünür." = "M3U bağlantınızı ekleyin; kanallar Ana Sayfa'da görünür.";
 "M3U bağlantısı" = "M3U bağlantısı";
@@ -109,10 +114,10 @@
 "Netflix" = "Netflix";
 "Netflix ve Prime Video iPhone'da tarayıcıda oynatmaz ve korumalı videoları yansıtmada siyah görünür. YouTube ve korumasız siteler çalışır." = "Netflix ve Prime Video iPhone'da tarayıcıda oynatmaz ve korumalı videoları yansıtmada siyah görünür. YouTube ve korumasız siteler çalışır.";
 "Netflix, Prime Video gibi korumalı videolar yansıtmada siyah görünür; bu, o servislerin koruması." = "Netflix, Prime Video gibi korumalı videolar yansıtmada siyah görünür; bu, o servislerin koruması.";
-"O zamana kadar Perde ile yansıtabilirsiniz." = "O zamana kadar Perde ile yansıtabilirsiniz.";
 "Oynat" = "Oynat";
 "Oynatıcıyı açar" = "Oynatıcıyı açar";
 "Oynatıcıyı küçült" = "Oynatıcıyı küçült";
+"Oynatılıyor: %@" = "Oynatılıyor: %@";
 "Perde" = "Perde";
 "Perde hazır" = "Perde hazır";
 "Perde ile yansıtın" = "Perde ile yansıtın";
@@ -145,16 +150,17 @@
 "Telefonda Torpido'yu açın ve Yansıtmayı Başlat'a dokunun." = "Telefonda Torpido'yu açın ve Yansıtmayı Başlat'a dokunun.";
 "Telefonda yer yok: bu video için yaklaşık %lld MB gerekiyor." = "Telefonda yer yok: bu video için yaklaşık %lld MB gerekiyor.";
 "Torpido" = "Torpido";
-"Torpido'nun alıcı olarak görünmesi (DLNA) Apple'ın ağ iznini bekliyor. O zamana kadar her uygulama Perde ile yansıtılabilir; korumalı olanlar hariç." = "Torpido'nun alıcı olarak görünmesi (DLNA) Apple'ın ağ iznini bekliyor. O zamana kadar her uygulama Perde ile yansıtılabilir; korumalı olanlar hariç.";
 "Uygulamadan gönder" = "Uygulamadan gönder";
 "Uygulamanın dilini iPhone Ayarları'nda değiştirin." = "Uygulamanın dilini iPhone Ayarları'nda değiştirin.";
 "Vazgeç" = "Vazgeç";
+"Video Torpido'da açılır; araba ekranında görmek için Perde'de yansıtmayı başlatın." = "Video Torpido'da açılır; araba ekranında görmek için Perde'de yansıtmayı başlatın.";
 "Video dosyası bulunamadı. Videolar listesinden silip yeniden içe aktarın." = "Video dosyası bulunamadı. Videolar listesinden silip yeniden içe aktarın.";
 "Video kopyalanıyor…" = "Video kopyalanıyor…";
 "Video okunamadı. Dosya bozuk olabilir ya da iCloud'dan henüz inmemiş olabilir." = "Video okunamadı. Dosya bozuk olabilir ya da iCloud'dan henüz inmemiş olabilir.";
 "Video yok" = "Video yok";
 "Videolar" = "Videolar";
 "Videoyu adlandır" = "Videoyu adlandır";
+"Wi-Fi'ye bağlı değil. Alıcı yalnızca aynı Wi-Fi ağındaki uygulamalara görünür." = "Wi-Fi'ye bağlı değil. Alıcı yalnızca aynı Wi-Fi ağındaki uygulamalara görünür.";
 "Xtream" = "Xtream";
 "Xtream hesabı" = "Xtream hesabı";
 "Yansıtmayı Başlat" = "Yansıtmayı Başlat";

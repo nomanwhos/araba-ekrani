@@ -12,7 +12,8 @@
 "Ad (isteğe bağlı)" = "Name (optional)";
 "Adlandır" = "Rename";
 "Adres ya da arama" = "Address or search";
-"Alıcı başlatılamadı: %@" = "Couldn't start the receiver: %@";
+"Alıcı" = "Receiver";
+"Alıcı başlatılamadı: %@" = "Could not start the receiver: %@";
 "Ana Sayfa" = "Home";
 "Araba ekranı" = "Car screen";
 "Araba ekranına dokunmak telefonu kontrol etmez." = "Touching the car screen doesn't control the phone.";
@@ -22,6 +23,8 @@
 "Ayarlar" = "Settings";
 "Açık" = "On";
 "Açık kanal yok" = "No live channels";
+"Açıkken Torpido, aynı Wi-Fi ağındaki VLC, Plex gibi uygulamaların Gönder listesinde “Torpido (iPhone)” adıyla görünür. Arka planda da dinler; bunun için sessiz bir ses oturumu açık kalır ve pil biraz daha hızlı biter." = "While on, Torpido appears as “Torpido (iPhone)” in the Cast list of apps such as VLC and Plex on the same Wi-Fi. It keeps listening in the background by holding a silent audio session, so the battery drains a little faster.";
+"Ağda görünme başlatılamadı: %@" = "Could not appear on the network: %@";
 "Aşağıdaki düğmeye dokunun, açılan pencerede Yayını Başlat'ı seçin." = "Tap the button below, then choose Start Broadcast in the window that opens.";
 "Bağlantıyı yapıştırın ya da QR kodunu okutun" = "Paste the link or scan its QR code";
 "Bağlı" = "Connected";
@@ -60,6 +63,8 @@
 "Geri" = "Back";
 "Geçmişi temizle" = "Clear history";
 "Gruptaki tüm kanalları gösterir" = "Shows every channel in the group";
+"Gönder düğmesi olmayan uygulamalar Perde ile yansıtılabilir; korumalı olanlar hariç." = "Apps without a Cast button can be mirrored with Perde, except protected ones.";
+"Gönderilmesini bekliyor" = "Waiting for a cast";
 "Görüntüyü ekrana doldur" = "Fill the screen";
 "Görüntüyü sığdır" = "Fit picture";
 "Güncellendi: " = "Updated: ";
@@ -98,7 +103,7 @@
 "Liste indirildi ama içinde oynatılabilir kanal yok." = "The list downloaded but has no playable channels.";
 "Liste indirilemedi (sunucu %lld döndürdü). Bağlantının süresi dolmuş olabilir." = "Couldn't download the list (the server returned %lld). The link may have expired.";
 "Liste indirilemedi. İnternet bağlantınızı ve adresi kontrol edin." = "Couldn't download the list. Check your internet connection and the address.";
-"Listeden Torpido'yu seçin. Bu adım Apple'ın ağ izni geldikten sonra çalışacak." = "Choose Torpido in the list. This step works once Apple grants the network permission.";
+"Listeden Torpido'yu seçin. Alıcı açık olmalı ve iPhone ile aynı Wi-Fi ağında olmalı." = "Pick Torpido from the list. The receiver must be on and on the same Wi-Fi as the iPhone.";
 "Listenin kanalları, favorileri ve kaldığınız yerler de silinir." = "Its channels, favourites and resume points are deleted too.";
 "M3U bağlantınızı ekleyin; kanallar Ana Sayfa'da görünür." = "Add your M3U link; its channels appear on Home.";
 "M3U bağlantısı" = "M3U link";
@@ -109,10 +114,10 @@
 "Netflix" = "Netflix";
 "Netflix ve Prime Video iPhone'da tarayıcıda oynatmaz ve korumalı videoları yansıtmada siyah görünür. YouTube ve korumasız siteler çalışır." = "Netflix and Prime Video won't play in a browser on iPhone, and their protected videos are black when mirrored. YouTube and unprotected sites work.";
 "Netflix, Prime Video gibi korumalı videolar yansıtmada siyah görünür; bu, o servislerin koruması." = "Protected videos such as Netflix and Prime Video are black when mirrored; that's those services' protection.";
-"O zamana kadar Perde ile yansıtabilirsiniz." = "Until then you can mirror with Screen.";
 "Oynat" = "Play";
 "Oynatıcıyı açar" = "Opens the player";
 "Oynatıcıyı küçült" = "Minimise player";
+"Oynatılıyor: %@" = "Playing: %@";
 "Perde" = "Screen";
 "Perde hazır" = "Screen ready";
 "Perde ile yansıtın" = "Mirror with Screen";
@@ -145,16 +150,17 @@
 "Telefonda Torpido'yu açın ve Yansıtmayı Başlat'a dokunun." = "Open Torpido on your phone and tap Start Mirroring.";
 "Telefonda yer yok: bu video için yaklaşık %lld MB gerekiyor." = "Not enough space: this video needs about %lld MB more.";
 "Torpido" = "Torpido";
-"Torpido'nun alıcı olarak görünmesi (DLNA) Apple'ın ağ iznini bekliyor. O zamana kadar her uygulama Perde ile yansıtılabilir; korumalı olanlar hariç." = "Showing up as a receiver (DLNA) is waiting for Apple's network permission. Until then, any app except protected ones can be mirrored with Screen.";
 "Uygulamadan gönder" = "Send from an app";
 "Uygulamanın dilini iPhone Ayarları'nda değiştirin." = "Change the app's language in iPhone Settings.";
 "Vazgeç" = "Cancel";
+"Video Torpido'da açılır; araba ekranında görmek için Perde'de yansıtmayı başlatın." = "The video opens in Torpido; start mirroring in Perde to see it on the car screen.";
 "Video dosyası bulunamadı. Videolar listesinden silip yeniden içe aktarın." = "Video file not found. Delete it from Videos and import it again.";
 "Video kopyalanıyor…" = "Copying video…";
 "Video okunamadı. Dosya bozuk olabilir ya da iCloud'dan henüz inmemiş olabilir." = "Couldn't read the video. The file may be damaged or not yet downloaded from iCloud.";
 "Video yok" = "No videos";
 "Videolar" = "Videos";
 "Videoyu adlandır" = "Rename video";
+"Wi-Fi'ye bağlı değil. Alıcı yalnızca aynı Wi-Fi ağındaki uygulamalara görünür." = "Not connected to Wi-Fi. The receiver is only visible to apps on the same Wi-Fi network.";
 "Xtream" = "Xtream";
 "Xtream hesabı" = "Xtream account";
 "Yansıtmayı Başlat" = "Start Mirroring";

@@ -171,4 +171,16 @@ EN = {
     "Sunucu bir hata döndürdü (%lld).": "The server returned an error (%lld).",
     "Sunucunun yanıtı anlaşılamadı. Bu bir Xtream ya da Jellyfin sunucusu mu?":
         "Couldn't understand the server's reply. Is this an Xtream or Jellyfin server?",
+    # DLNA receiver
+    "Wi-Fi'ye bağlı değil. Alıcı yalnızca aynı Wi-Fi ağındaki uygulamalara görünür.": 'Not connected to Wi-Fi. The receiver is only visible to apps on the same Wi-Fi network.',
+    'Ağda görünme başlatılamadı: %@': 'Could not appear on the network: %@',
+    'Alıcı başlatılamadı: %@': 'Could not start the receiver: %@',
+    'Alıcı': 'Receiver',
+    'Açıkken Torpido, aynı Wi-Fi ağındaki VLC, Plex gibi uygulamaların Gönder listesinde “Torpido (iPhone)” adıyla görünür. Arka planda da dinler; bunun için sessiz bir ses oturumu açık kalır ve pil biraz daha hızlı biter.': 'While on, Torpido appears as “Torpido (iPhone)” in the Cast list of apps such as VLC and Plex on the same Wi-Fi. It keeps listening in the background by holding a silent audio session, so the battery drains a little faster.',
+    'Gönder düğmesi olmayan uygulamalar Perde ile yansıtılabilir; korumalı olanlar hariç.': 'Apps without a Cast button can be mirrored with Perde, except protected ones.',
+    'Oynatılıyor: %@': 'Playing: %@',
+    'Gönderilmesini bekliyor': 'Waiting for a cast',
+    "Listeden Torpido'yu seçin. Alıcı açık olmalı ve iPhone ile aynı Wi-Fi ağında olmalı.": 'Pick Torpido from the list. The receiver must be on and on the same Wi-Fi as the iPhone.',
+    "Video Torpido'da açılır; araba ekranında görmek için Perde'de yansıtmayı başlatın.": 'The video opens in Torpido; start mirroring in Perde to see it on the car screen.',
+    'Kapalı': 'Off',
 }

@@ -41,6 +41,8 @@ targets:
       properties:
         # Must be granted to your team by Apple: developer.apple.com/carplay
         com.apple.developer.carplay-maps: true
+        # Granted 2026-10-23: SSDP discovery for the DLNA receiver.
+        com.apple.developer.networking.multicast: true
     info:
       path: App/Info.plist
       properties:
@@ -51,6 +53,7 @@ targets:
           UIColorName: Night
         # Most IPTV streams and playlists are plain http. Personal build, not for the App Store.
         ITSAppUsesNonExemptEncryption: false
+        NSLocalNetworkUsageDescription: Torpido, aynı Wi-Fi ağındaki uygulamaların video gönderebilmesi için alıcı açıkken yerel ağda görünür.
         NSAppTransportSecurity:
           NSAllowsArbitraryLoads: true
         # Keeps sound playing from the mini player with the screen locked.

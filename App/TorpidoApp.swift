@@ -6,6 +6,7 @@ struct TorpidoApp: App {
 
     init() {
         MirrorServer.shared.start()
+        DLNARenderer.shared.restore()
         #if DEBUG
         DebugLaunchState.apply()
         DebugLaunchState.resetIfRequested()

@@ -14,6 +14,9 @@ import sys
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 SKIP = ("DesignCatalogView", "DebugLaunchState", "Theme.generated")
+# Network protocol code: full of wire words (SOAP, SSDP, HTTP), so only
+# literals in a localized context there count as copy.
+WIRE = ("UPnPMessages", "DLNARenderer", "PlayerController+Cast")
 LITERAL = re.compile(r'"((?:[^"\\\n]|\\.)*)"')
 TURKISH = r"[çğıöşüÇĞİÖŞÜ]"
 # Contexts where SwiftUI or String(localized:) looks the literal up.
@@ -72,9 +75,11 @@ def scan():
             if not looks_like_copy(text):
                 continue
             before = src[max(0, m.start() - 60):m.start()]
+            localized = bool(LOCALIZED_BEFORE.search(before))
+            if not localized and any(w in path for w in WIRE):
+                continue
             line = src.count("\n", 0, m.start()) + 1
-            found.setdefault(to_key(text), []).append(
-                (pathlib.Path(path).relative_to(ROOT), line, bool(LOCALIZED_BEFORE.search(before))))
+            found.setdefault(to_key(text), []).append((pathlib.Path(path).relative_to(ROOT), line, localized))
     return found
 
 
