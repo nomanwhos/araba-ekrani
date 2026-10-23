@@ -138,10 +138,10 @@ private struct CastGuideDetail: View {
         switch app.route {
         case .mirror:
             ["Önce Perde'de Yansıtmayı Başlat'a dokunun.",
-             "\(app.name)'u açın ve videoyu oynatın; telefon ekranı arabada görünür.",
-             "Sesi telefondan arabaya her zamanki gibi gelir."]
+             "\(app.name) uygulamasını açıp videoyu oynatın; telefon ekranı arabada görünür.",
+             "Ses telefondan arabaya her zamanki gibi gelir."]
         case .dlna:
-            ["\(app.name)'ta videoyu açın ve Gönder (Cast) düğmesine dokunun.",
+            ["\(app.name) uygulamasında videoyu açıp Gönder (Cast) düğmesine dokunun.",
              "Listeden Torpido'yu seçin. Bu adım Apple'ın ağ izni geldikten sonra çalışacak.",
              "O zamana kadar Perde ile yansıtabilirsiniz."]
         case .protected:
