@@ -54,12 +54,13 @@ struct HealthChecker {
                 ORDER BY c.last_checked_at IS NOT NULL, c.last_checked_at
                 LIMIT ?
                 """, arguments: [now - Self.minInterval, Self.perRunLimit])
+            .map { row -> [String] in [row["id"], row["source_id"], row["url"]] }
         }
-        .compactMap { row in
+        .compactMap { fields in
             // Stored URLs may hold credential placeholders; fill them in memory only.
-            guard let stored = URL(string: row["url"]),
-                  let url = StreamResolver(database: database).playableURL(for: stored, sourceID: row["source_id"]) else { return nil }
-            return Target(channelID: row["id"], url: url)
+            guard let stored = URL(string: fields[2]),
+                  let url = StreamResolver(database: database).playableURL(for: stored, sourceID: fields[1]) else { return nil }
+            return Target(channelID: fields[0], url: url)
         }
     }
 
