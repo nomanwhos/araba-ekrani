@@ -33,6 +33,7 @@
 "Bir M3U bağlantısı ekleyin, kanallar burada gruplarıyla listelenir." = "Add an M3U link and its channels appear here, grouped.";
 "Bir kanala basılı tutup Favorilere ekle'yi seçin, ya da oynatırken yıldıza dokunun." = "Press and hold a channel and choose Add to Favourites, or tap the star while it plays.";
 "Bu adres bir kanal listesi değil: içeriği #EXTM3U ile başlamıyor." = "This address isn't a channel list: its content doesn't start with #EXTM3U.";
+"Bu araç CarPlay'de video oynatmayı desteklemiyor" = "This car doesn't support video in CarPlay";
 "Bu bir bağlantı değil. http:// ya da https:// ile başlayan adresi yapıştırın." = "That isn't a link. Paste an address starting with http:// or https://.";
 "Bu kanalın oynatılabilir bir adresi yok." = "This channel has no playable address.";
 "Bu klasörde oynatılabilir video bulunamadı." = "No playable videos in this folder.";
@@ -53,6 +54,7 @@
 "Ekran yansıtmada görüntü siyah, ses açık kalır; bu, servisin kuralı." = "When mirrored, the picture is black and the sound stays on; that's the service's rule.";
 "Emby" = "Emby";
 "Favori" = "Favourite";
+"Favori kanal yok" = "No favourite channels";
 "Favori yok" = "No favourites";
 "Favoriler" = "Favourites";
 "Favorilerden çıkar" = "Remove from Favourites";
@@ -147,9 +149,12 @@
 "Tamam" = "Done";
 "Tarayıcı" = "Browser";
 "Tekrar dene" = "Try again";
+"Telefonda Favoriler › Videolar'dan içe aktarın." = "Import them on your phone from Favoriler › Videolar.";
 "Telefonda Torpido'yu açın ve Yansıtmayı Başlat'a dokunun." = "Open Torpido on your phone and tap Start Mirroring.";
+"Telefonda bir kanalın yıldızına dokunun." = "Tap a channel's star on your phone.";
 "Telefonda yer yok: bu video için yaklaşık %lld MB gerekiyor." = "Not enough space: this video needs about %lld MB more.";
 "Torpido" = "Torpido";
+"Torpido'yu telefonda kullanmaya devam edebilirsiniz." = "You can keep using Torpido on your phone.";
 "Uygulamadan gönder" = "Send from an app";
 "Uygulamanın dilini iPhone Ayarları'nda değiştirin." = "Change the app's language in iPhone Settings.";
 "Vazgeç" = "Cancel";

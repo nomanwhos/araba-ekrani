@@ -183,4 +183,10 @@ EN = {
     "Listeden Torpido'yu seçin. Alıcı açık olmalı ve iPhone ile aynı Wi-Fi ağında olmalı.": 'Pick Torpido from the list. The receiver must be on and on the same Wi-Fi as the iPhone.',
     "Video Torpido'da açılır; araba ekranında görmek için Perde'de yansıtmayı başlatın.": 'The video opens in Torpido; start mirroring in Perde to see it on the car screen.',
     'Kapalı': 'Off',
+    # CarPlay video
+    "Bu araç CarPlay'de video oynatmayı desteklemiyor": "This car doesn't support video in CarPlay",
+    "Torpido'yu telefonda kullanmaya devam edebilirsiniz.": 'You can keep using Torpido on your phone.',
+    'Favori kanal yok': 'No favourite channels',
+    'Telefonda bir kanalın yıldızına dokunun.': "Tap a channel's star on your phone.",
+    "Telefonda Favoriler › Videolar'dan içe aktarın.": 'Import them on your phone from Favoriler › Videolar.',
 }
