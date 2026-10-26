@@ -65,7 +65,7 @@
 "Geri" = "Back";
 "Geçmişi temizle" = "Clear history";
 "Gruptaki tüm kanalları gösterir" = "Shows every channel in the group";
-"Gönder düğmesi olmayan uygulamalar Perde ile yansıtılabilir; korumalı olanlar hariç." = "Apps without a Cast button can be mirrored with Perde, except protected ones.";
+"Gönder düğmesi olmayan uygulamalar Perde ile yansıtılabilir; korumalı olanlar hariç." = "Apps without a Cast button can be mirrored with Screen, except protected ones.";
 "Gönderilmesini bekliyor" = "Waiting for a cast";
 "Görüntüyü ekrana doldur" = "Fill the screen";
 "Görüntüyü sığdır" = "Fit picture";
@@ -149,7 +149,7 @@
 "Tamam" = "Done";
 "Tarayıcı" = "Browser";
 "Tekrar dene" = "Try again";
-"Telefonda Favoriler › Videolar'dan içe aktarın." = "Import them on your phone from Favoriler › Videolar.";
+"Telefonda Favoriler › Videolar'dan içe aktarın." = "Import them on your phone from Favourites › Videos.";
 "Telefonda Torpido'yu açın ve Yansıtmayı Başlat'a dokunun." = "Open Torpido on your phone and tap Start Mirroring.";
 "Telefonda bir kanalın yıldızına dokunun." = "Tap a channel's star on your phone.";
 "Telefonda yer yok: bu video için yaklaşık %lld MB gerekiyor." = "Not enough space: this video needs about %lld MB more.";
@@ -158,7 +158,7 @@
 "Uygulamadan gönder" = "Send from an app";
 "Uygulamanın dilini iPhone Ayarları'nda değiştirin." = "Change the app's language in iPhone Settings.";
 "Vazgeç" = "Cancel";
-"Video Torpido'da açılır; araba ekranında görmek için Perde'de yansıtmayı başlatın." = "The video opens in Torpido; start mirroring in Perde to see it on the car screen.";
+"Video Torpido'da açılır; araba ekranında görmek için Perde'de yansıtmayı başlatın." = "The video opens in Torpido; start mirroring in Screen to see it on the car screen.";
 "Video dosyası bulunamadı. Videolar listesinden silip yeniden içe aktarın." = "Video file not found. Delete it from Videos and import it again.";
 "Video kopyalanıyor…" = "Copying video…";
 "Video okunamadı. Dosya bozuk olabilir ya da iCloud'dan henüz inmemiş olabilir." = "Couldn't read the video. The file may be damaged or not yet downloaded from iCloud.";
