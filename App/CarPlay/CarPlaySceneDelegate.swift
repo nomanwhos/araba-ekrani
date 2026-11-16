@@ -3,24 +3,27 @@ import CoreMedia
 
 /// Runs when the iPhone is connected to CarPlay.
 ///
-/// Torpido has the CarPlay Video App entitlement (com.apple.developer.carplay-video,
-/// granted 2026-10-23). Video apps get templates, not a window: the car shows
-/// lists of favourite channels and imported videos, and picking one plays it in
-/// the shared player, which iOS shows on the car screen while the car is parked.
-/// Cars without video support hide video apps; the status row below says which
-/// case a car is in.
+/// Torpido has the CarPlay Audio App entitlement (com.apple.developer.carplay-audio,
+/// granted 2026-11-15). Audio apps show in every CarPlay car: tabs list favourite
+/// channels, recently played items and imported videos, and picking one plays it
+/// in the shared player and opens the Now Playing screen. Since iOS 26.4 the audio
+/// entitlement also covers mixed audio and video, so in cars that support video the
+/// rows ask for video presentation; elsewhere they play as audio.
 ///
 /// The window variant further down is the navigation-entitlement path
-/// (com.apple.developer.carplay-maps) for mirroring, kept for if that is ever granted.
+/// (com.apple.developer.carplay-maps) for mirroring. Apple declined it on 2026-11-13;
+/// it stays so the mirroring code keeps compiling and could be reused.
 @MainActor
-final class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegate, CPSessionConfigurationDelegate {
+final class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegate, CPSessionConfigurationDelegate,
+    CPTabBarTemplateDelegate {
     private static let maxListItems = 100
 
     private var interfaceController: CPInterfaceController?
     private var sessionConfiguration: CPSessionConfiguration?
     private var fillObserver: NSObjectProtocol?
+    private var lists: [(template: CPListTemplate, items: () -> [CPListItem])] = []
 
-    // MARK: - Video app (templates)
+    // MARK: - Audio app (templates)
 
     func templateApplicationScene(
         _ templateApplicationScene: CPTemplateApplicationScene,
@@ -38,11 +41,18 @@ final class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegat
     ) {
         self.interfaceController = nil
         sessionConfiguration = nil
+        lists = []
         MirrorState.shared.isCarConnected = false
     }
 
     nonisolated func sessionConfiguration(_ sessionConfiguration: CPSessionConfiguration,
-                              limitedUserInterfacesChanged limitedUserInterfaces: CPLimitableUserInterface) {}
+                                          limitedUserInterfacesChanged limitedUserInterfaces: CPLimitableUserInterface) {}
+
+    /// Favourites or videos may have changed on the phone; refresh the tab being opened.
+    func tabBarTemplate(_ tabBarTemplate: CPTabBarTemplate, didSelect selectedTemplate: CPTemplate) {
+        guard let list = lists.first(where: { $0.template === selectedTemplate }) else { return }
+        list.template.updateSections([CPListSection(items: list.items())])
+    }
 
     private var carSupportsVideo: Bool {
         guard #available(iOS 26.4, *) else { return false }
@@ -50,51 +60,83 @@ final class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegat
     }
 
     private func makeRoot() -> CPTemplate {
-        guard carSupportsVideo else {
-            let item = CPListItem(text: String(localized: "Bu araç CarPlay'de video oynatmayı desteklemiyor"),
-                                  detailText: String(localized: "Torpido'yu telefonda kullanmaya devam edebilirsiniz."))
-            let list = CPListTemplate(title: "Torpido", sections: [CPListSection(items: [item])])
-            return list
-        }
-        let favorites = CPListTemplate(title: String(localized: "Favoriler"), sections: [CPListSection(items: favoriteItems())])
-        favorites.tabImage = UIImage(systemName: "star.fill")
-        favorites.emptyViewTitleVariants = [String(localized: "Favori kanal yok")]
-        favorites.emptyViewSubtitleVariants = [String(localized: "Telefonda bir kanalın yıldızına dokunun.")]
+        let favorites = makeList(title: String(localized: "Favoriler"), symbol: "star.fill",
+                                 emptyTitle: String(localized: "Favori kanal yok"),
+                                 emptySubtitle: String(localized: "Telefonda bir kanalın yıldızına dokunun."),
+                                 items: { [weak self] in self?.favoriteItems() ?? [] })
+        let recent = makeList(title: String(localized: "Son izlenenler"), symbol: "clock.arrow.circlepath",
+                              emptyTitle: String(localized: "Henüz bir şey oynatılmadı"),
+                              emptySubtitle: String(localized: "Telefonda ya da burada bir kanal açın."),
+                              items: { [weak self] in self?.recentItems() ?? [] })
+        let videos = makeList(title: String(localized: "Videolar"), symbol: "film",
+                              emptyTitle: String(localized: "Video yok"),
+                              emptySubtitle: String(localized: "Telefonda Favoriler › Videolar'dan içe aktarın."),
+                              items: { [weak self] in self?.videoItems() ?? [] })
+        let tabs = CPTabBarTemplate(templates: [favorites, recent, videos])
+        tabs.delegate = self
+        return tabs
+    }
 
-        let videos = CPListTemplate(title: String(localized: "Videolar"), sections: [CPListSection(items: videoItems())])
-        videos.tabImage = UIImage(systemName: "film")
-        videos.emptyViewTitleVariants = [String(localized: "Video yok")]
-        videos.emptyViewSubtitleVariants = [String(localized: "Telefonda Favoriler › Videolar'dan içe aktarın.")]
-
-        return CPTabBarTemplate(templates: [favorites, videos])
+    private func makeList(title: String, symbol: String, emptyTitle: String, emptySubtitle: String,
+                          items: @escaping () -> [CPListItem]) -> CPListTemplate {
+        let list = CPListTemplate(title: title, sections: [CPListSection(items: items())])
+        list.tabImage = UIImage(systemName: symbol)
+        list.emptyViewTitleVariants = [emptyTitle]
+        list.emptyViewSubtitleVariants = [emptySubtitle]
+        lists.append((list, items))
+        return list
     }
 
     private func favoriteItems() -> [CPListItem] {
         let channels = (try? AppDatabase.shared.reader.read { try LibraryQueries.favoriteChannels($0) }) ?? []
-        return channels.prefix(Self.maxListItems).map { channel in
-            makeItem(title: channel.name, detail: nil) { PlayerController.shared.play(channel) }
+        return channels.prefix(Self.maxListItems).map(item(for:))
+    }
+
+    private func recentItems() -> [CPListItem] {
+        let recent = (try? AppDatabase.shared.reader.read { try LibraryQueries.recentItems(limit: Self.maxListItems, $0) }) ?? []
+        return recent.map { entry in
+            switch entry {
+            case .channel(let channel): item(for: channel)
+            case .video(let video): item(for: video)
+            }
         }
     }
 
     private func videoItems() -> [CPListItem] {
         let videos = (try? AppDatabase.shared.reader.read { try LibraryQueries.localVideos($0) }) ?? []
-        return videos.prefix(Self.maxListItems).map { video in
-            makeItem(title: video.displayName, detail: nil) { PlayerController.shared.play(video) }
-        }
+        return videos.prefix(Self.maxListItems).map(item(for:))
     }
 
-    private func makeItem(title: String, detail: String?, play: @escaping @MainActor () -> Void) -> CPListItem {
-        let item = CPListItem(text: title, detailText: detail)
+    private func item(for channel: Channel) -> CPListItem {
+        makeItem(title: channel.name) { PlayerController.shared.play(channel) }
+    }
+
+    private func item(for video: LocalVideo) -> CPListItem {
+        makeItem(title: video.displayName) { PlayerController.shared.play(video) }
+    }
+
+    private func makeItem(title: String, play: @escaping @MainActor () -> Void) -> CPListItem {
+        let item = CPListItem(text: title, detailText: nil)
+        item.isPlaying = PlayerController.shared.nowPlaying?.title == title
         if #available(iOS 26.4, *) {
-            // Tells CarPlay this row starts video, so the car switches to the video view.
+            // Video where the car supports it; otherwise the system plays the sound only.
             item.playbackConfiguration = CPPlaybackConfiguration(
-                preferredPresentation: .video, playbackAction: .play, elapsedTime: .zero, duration: .zero)
+                preferredPresentation: carSupportsVideo ? .video : .audio,
+                playbackAction: .play, elapsedTime: .zero, duration: .zero)
         }
-        item.handler = { _, completion in
-            MainActor.assumeIsolated { play() }
+        item.handler = { [weak self] _, completion in
+            MainActor.assumeIsolated {
+                play()
+                self?.showNowPlaying()
+            }
             completion()
         }
         return item
+    }
+
+    private func showNowPlaying() {
+        guard let interfaceController, interfaceController.topTemplate !== CPNowPlayingTemplate.shared else { return }
+        interfaceController.pushTemplate(CPNowPlayingTemplate.shared, animated: true, completion: nil)
     }
 
     // MARK: - Navigation app (window), for mirroring

@@ -189,4 +189,8 @@ EN = {
     'Favori kanal yok': 'No favourite channels',
     'Telefonda bir kanalın yıldızına dokunun.': "Tap a channel's star on your phone.",
     "Telefonda Favoriler › Videolar'dan içe aktarın.": 'Import them on your phone from Favourites › Videos.',
+    # CarPlay audio
+    'Son izlenenler': 'Recently played',
+    'Henüz bir şey oynatılmadı': 'Nothing played yet',
+    'Telefonda ya da burada bir kanal açın.': 'Open a channel here or on your phone.',
 }

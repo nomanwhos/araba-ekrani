@@ -33,7 +33,6 @@
 "Bir M3U bağlantısı ekleyin, kanallar burada gruplarıyla listelenir." = "Bir M3U bağlantısı ekleyin, kanallar burada gruplarıyla listelenir.";
 "Bir kanala basılı tutup Favorilere ekle'yi seçin, ya da oynatırken yıldıza dokunun." = "Bir kanala basılı tutup Favorilere ekle'yi seçin, ya da oynatırken yıldıza dokunun.";
 "Bu adres bir kanal listesi değil: içeriği #EXTM3U ile başlamıyor." = "Bu adres bir kanal listesi değil: içeriği #EXTM3U ile başlamıyor.";
-"Bu araç CarPlay'de video oynatmayı desteklemiyor" = "Bu araç CarPlay'de video oynatmayı desteklemiyor";
 "Bu bir bağlantı değil. http:// ya da https:// ile başlayan adresi yapıştırın." = "Bu bir bağlantı değil. http:// ya da https:// ile başlayan adresi yapıştırın.";
 "Bu kanalın oynatılabilir bir adresi yok." = "Bu kanalın oynatılabilir bir adresi yok.";
 "Bu klasörde oynatılabilir video bulunamadı." = "Bu klasörde oynatılabilir video bulunamadı.";
@@ -71,6 +70,7 @@
 "Görüntüyü sığdır" = "Görüntüyü sığdır";
 "Güncellendi: " = "Güncellendi: ";
 "Hakkında" = "Hakkında";
+"Henüz bir şey oynatılmadı" = "Henüz bir şey oynatılmadı";
 "Henüz indirilmedi" = "Henüz indirilmedi";
 "Henüz kanal yok" = "Henüz kanal yok";
 "Hesap etkin değil (durum: %@). Sağlayıcınızla görüşün." = "Hesap etkin değil (durum: %@). Sağlayıcınızla görüşün.";
@@ -134,6 +134,7 @@
 "Sil" = "Sil";
 "Silinemedi: %@" = "Silinemedi: %@";
 "Sola kaydırarak yenileyin ya da silin." = "Sola kaydırarak yenileyin ya da silin.";
+"Son izlenenler" = "Son izlenenler";
 "Sonuç yok" = "Sonuç yok";
 "Sunucu adresi" = "Sunucu adresi";
 "Sunucu adresi geçersiz. http:// ya da https:// ile başlayan adresi yazın (örn. http://sunucu.com:8080)." = "Sunucu adresi geçersiz. http:// ya da https:// ile başlayan adresi yazın (örn. http://sunucu.com:8080).";
@@ -152,9 +153,9 @@
 "Telefonda Favoriler › Videolar'dan içe aktarın." = "Telefonda Favoriler › Videolar'dan içe aktarın.";
 "Telefonda Torpido'yu açın ve Yansıtmayı Başlat'a dokunun." = "Telefonda Torpido'yu açın ve Yansıtmayı Başlat'a dokunun.";
 "Telefonda bir kanalın yıldızına dokunun." = "Telefonda bir kanalın yıldızına dokunun.";
+"Telefonda ya da burada bir kanal açın." = "Telefonda ya da burada bir kanal açın.";
 "Telefonda yer yok: bu video için yaklaşık %lld MB gerekiyor." = "Telefonda yer yok: bu video için yaklaşık %lld MB gerekiyor.";
 "Torpido" = "Torpido";
-"Torpido'yu telefonda kullanmaya devam edebilirsiniz." = "Torpido'yu telefonda kullanmaya devam edebilirsiniz.";
 "Uygulamadan gönder" = "Uygulamadan gönder";
 "Uygulamanın dilini iPhone Ayarları'nda değiştirin." = "Uygulamanın dilini iPhone Ayarları'nda değiştirin.";
 "Vazgeç" = "Vazgeç";

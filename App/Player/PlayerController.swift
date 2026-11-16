@@ -56,8 +56,14 @@ final class PlayerController {
         self.database = database
         rateObservation = player.observe(\.timeControlStatus) { [weak self] player, _ in
             let playing = player.timeControlStatus != .paused
-            Task { @MainActor in self?.isPlaying = playing }
+            Task { @MainActor in
+                self?.isPlaying = playing
+                self?.refreshNowPlaying()
+            }
         }
+        // Keeps sound going with the screen locked and while CarPlay plays it.
+        player.audiovisualBackgroundPlaybackPolicy = .continuesIfPossible
+        NowPlayingCenter.connect(self)
     }
 
     func play(_ channel: Channel) {
@@ -107,6 +113,12 @@ final class PlayerController {
         player.replaceCurrentItem(with: nil)
         nowPlaying = nil
         isFullScreen = false
+        NowPlayingCenter.clear()
+    }
+
+    private func refreshNowPlaying() {
+        guard let nowPlaying else { return }
+        NowPlayingCenter.update(title: nowPlaying.title, isLive: nowPlaying.channel != nil, player: player)
     }
 
     private func start(_ item: NowPlaying, url: URL?, resume: Double?, missingMessage: String) {
@@ -133,6 +145,7 @@ final class PlayerController {
             player.seek(to: CMTime(seconds: resume, preferredTimescale: 600))
         }
         player.play()
+        refreshNowPlaying()
     }
 
     /// Saves where the outgoing item stopped before something else starts.

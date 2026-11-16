@@ -39,8 +39,8 @@ targets:
     entitlements:
       path: App/Torpido.entitlements
       properties:
-        # CarPlay Video App, granted to the team 2026-10-23 (developer.apple.com/carplay)
-        com.apple.developer.carplay-video: true
+        # CarPlay Audio App, granted 2026-11-15 (Video App was granted 2026-10-23; the two cannot be combined)
+        com.apple.developer.carplay-audio: true
         # Granted 2026-10-23: SSDP discovery for the DLNA receiver.
         com.apple.developer.networking.multicast: true
     info:
