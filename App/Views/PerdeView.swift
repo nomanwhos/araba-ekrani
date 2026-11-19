@@ -41,6 +41,15 @@ struct PerdeView: View {
                 .listRowBackground(Theme.surface)
 
                 Section {
+                    Button {
+                        CarModeState.shared.isOpen = true
+                    } label: {
+                        Label {
+                            Text("Araba modu").foregroundStyle(Theme.text)
+                        } icon: {
+                            Image(systemName: "car.fill").foregroundStyle(.secondary)
+                        }
+                    }
                     NavigationLink {
                         BrowserView()
                     } label: {

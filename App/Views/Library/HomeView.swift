@@ -42,6 +42,11 @@ struct HomeView: View {
                 .navigationTitle("Ana Sayfa")
                 .toolbar {
                     Button {
+                        CarModeState.shared.isOpen = true
+                    } label: {
+                        Label("Araba modu", systemImage: "car")
+                    }
+                    Button {
                         addingSource = true
                     } label: {
                         Label("Kaynak ekle", systemImage: "plus")

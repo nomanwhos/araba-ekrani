@@ -24,6 +24,7 @@ struct RootView: View {
 
     @State private var selection: TabID = Self.initialTab
     @Bindable private var player = PlayerController.shared
+    @Bindable private var carMode = CarModeState.shared
     @State private var favorites: Set<String> = []
 
     var body: some View {
@@ -41,13 +42,16 @@ struct RootView: View {
                 SettingsView()
             }
         }
-        .fullScreenCover(isPresented: $player.isFullScreen) {
+        // Car mode presents the player itself, on top of its own screen.
+        .fullScreenCover(isPresented: Binding(get: { player.isFullScreen && !carMode.isOpen },
+                                              set: { player.isFullScreen = $0 })) {
             PlayerScreen(controller: player,
                          isFavorite: player.nowPlaying?.channel.map { favorites.contains($0.itemKey) },
                          toggleFavorite: {
                              if let channel = player.nowPlaying?.channel { try? FavoritesStore(database: .shared).toggle(channel) }
                          })
         }
+        .fullScreenCover(isPresented: $carMode.isOpen) { CarModeView() }
         .task {
             #if DEBUG
             if DebugLaunchState.autoplays,

@@ -195,4 +195,11 @@ EN = {
     'Telefonda ya da burada bir kanal açın.': 'Open a channel here or on your phone.',
     # CarPlay home
     "Telefonda Ayarlar › Kaynaklar'dan bir liste ekleyin.": 'Add a playlist on your phone in Settings › Sources.',
+    # Car mode
+    'Araba modu': 'Car mode',
+    'Araba modundan çık': 'Exit car mode',
+    'Cast': 'Cast',
+    'Bu ekrana gönderin': 'Send to this screen',
+    "Alıcı açıkken aynı Wi-Fi'deki uygulamaların ve bilgisayarların Gönder listesinde “Torpido (iPhone)” görünür. Gelen video burada tam ekran açılır.": 'While the receiver is on, “Torpido (iPhone)” appears in the Cast list of apps and computers on the same Wi-Fi. Videos sent to it open here full screen.',
+    'Bir kanalın yıldızına dokunun; burada büyük gösterilir.': "Tap a channel's star; it shows here in large.",
 }
