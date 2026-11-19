@@ -193,4 +193,6 @@ EN = {
     'Son izlenenler': 'Recently played',
     'Henüz bir şey oynatılmadı': 'Nothing played yet',
     'Telefonda ya da burada bir kanal açın.': 'Open a channel here or on your phone.',
+    # CarPlay home
+    "Telefonda Ayarlar › Kaynaklar'dan bir liste ekleyin.": 'Add a playlist on your phone in Settings › Sources.',
 }

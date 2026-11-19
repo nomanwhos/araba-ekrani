@@ -17,11 +17,12 @@ import CoreMedia
 final class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegate, CPSessionConfigurationDelegate,
     CPTabBarTemplateDelegate {
     private static let maxListItems = 100
+    private static let maxLogosPerRow = 12
 
     private var interfaceController: CPInterfaceController?
     private var sessionConfiguration: CPSessionConfiguration?
     private var fillObserver: NSObjectProtocol?
-    private var lists: [(template: CPListTemplate, items: () -> [CPListItem])] = []
+    private var lists: [(template: CPListTemplate, items: () -> [any CPListTemplateItem])] = []
 
     // MARK: - Audio app (templates)
 
@@ -60,6 +61,10 @@ final class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegat
     }
 
     private func makeRoot() -> CPTemplate {
+        let home = makeList(title: String(localized: "Ana Sayfa"), symbol: "house.fill",
+                            emptyTitle: String(localized: "Henüz kanal yok"),
+                            emptySubtitle: String(localized: "Telefonda Ayarlar › Kaynaklar'dan bir liste ekleyin."),
+                            items: { [weak self] in self?.homeItems() ?? [] })
         let favorites = makeList(title: String(localized: "Favoriler"), symbol: "star.fill",
                                  emptyTitle: String(localized: "Favori kanal yok"),
                                  emptySubtitle: String(localized: "Telefonda bir kanalın yıldızına dokunun."),
@@ -72,19 +77,58 @@ final class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegat
                               emptyTitle: String(localized: "Video yok"),
                               emptySubtitle: String(localized: "Telefonda Favoriler › Videolar'dan içe aktarın."),
                               items: { [weak self] in self?.videoItems() ?? [] })
-        let tabs = CPTabBarTemplate(templates: [favorites, recent, videos])
+        let tabs = CPTabBarTemplate(templates: [home, favorites, recent, videos])
         tabs.delegate = self
         return tabs
     }
 
     private func makeList(title: String, symbol: String, emptyTitle: String, emptySubtitle: String,
-                          items: @escaping () -> [CPListItem]) -> CPListTemplate {
+                          items: @escaping () -> [any CPListTemplateItem]) -> CPListTemplate {
         let list = CPListTemplate(title: title, sections: [CPListSection(items: items())])
         list.tabImage = UIImage(systemName: symbol)
         list.emptyViewTitleVariants = [emptyTitle]
         list.emptyViewSubtitleVariants = [emptySubtitle]
         lists.append((list, items))
         return list
+    }
+
+    /// One row per group: its name and a strip of channel logos. Tapping a logo plays
+    /// that channel; tapping the row opens the whole group.
+    private func homeItems() -> [any CPListTemplateItem] {
+        let sections = (try? AppDatabase.shared.reader.read { try LibraryQueries.homeSections($0) }) ?? []
+        return sections.map { section in
+            let channels = Array(section.channels.prefix(Self.maxLogosPerRow))
+            let artwork = RowArtwork(count: channels.count)
+            let title = [section.group.title, "(\(section.total))"].joined(separator: " ")
+            let row = CPListImageRowItem(text: title, images: artwork.images)
+            row.listImageRowHandler = { [weak self] _, index, completion in
+                MainActor.assumeIsolated {
+                    if channels.indices.contains(index) {
+                        PlayerController.shared.play(channels[index])
+                        self?.showNowPlaying()
+                    }
+                }
+                completion()
+            }
+            row.handler = { [weak self] _, completion in
+                MainActor.assumeIsolated { self?.showGroup(section.group) }
+                completion()
+            }
+            for (index, channel) in channels.enumerated() {
+                LogoCache.shared.image(for: channel.logoURL, size: CPListImageRowItem.maximumImageSize) { [weak row] image in
+                    artwork.images[index] = image
+                    row?.update(artwork.images)
+                }
+            }
+            return row
+        }
+    }
+
+    private func showGroup(_ group: ChannelGroup) {
+        let channels = (try? AppDatabase.shared.reader.read { try LibraryQueries.channels(in: group.id, $0) }) ?? []
+        let items = channels.filter { $0.health != .down }.prefix(Self.maxListItems).map(item(for:))
+        let list = CPListTemplate(title: group.title, sections: [CPListSection(items: Array(items))])
+        interfaceController?.pushTemplate(list, animated: true, completion: nil)
     }
 
     private func favoriteItems() -> [CPListItem] {
@@ -108,16 +152,23 @@ final class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegat
     }
 
     private func item(for channel: Channel) -> CPListItem {
-        makeItem(title: channel.name) { PlayerController.shared.play(channel) }
+        let item = makeItem(title: CarPlayText.cleanName(channel.name), playingTitle: channel.name) {
+            PlayerController.shared.play(channel)
+        }
+        item.setImage(LogoCache.placeholder)
+        LogoCache.shared.image(for: channel.logoURL, size: CPListItem.maximumImageSize) { [weak item] image in
+            item?.setImage(image)
+        }
+        return item
     }
 
     private func item(for video: LocalVideo) -> CPListItem {
-        makeItem(title: video.displayName) { PlayerController.shared.play(video) }
+        makeItem(title: video.displayName, playingTitle: video.displayName) { PlayerController.shared.play(video) }
     }
 
-    private func makeItem(title: String, play: @escaping @MainActor () -> Void) -> CPListItem {
+    private func makeItem(title: String, playingTitle: String, play: @escaping @MainActor () -> Void) -> CPListItem {
         let item = CPListItem(text: title, detailText: nil)
-        item.isPlaying = PlayerController.shared.nowPlaying?.title == title
+        item.isPlaying = PlayerController.shared.nowPlaying?.title == playingTitle
         if #available(iOS 26.4, *) {
             // Video where the car supports it; otherwise the system plays the sound only.
             item.playbackConfiguration = CPPlaybackConfiguration(
@@ -190,5 +241,16 @@ final class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegat
         return CPBarButton(title: fills ? String(localized: "Sığdır") : String(localized: "Doldur")) { _ in
             MainActor.assumeIsolated { MirrorState.shared.fillsCarScreen.toggle() }
         }
+    }
+}
+
+
+/// The logos of one Home row, filled in as they download.
+@MainActor
+private final class RowArtwork {
+    var images: [UIImage]
+
+    init(count: Int) {
+        images = Array(repeating: LogoCache.placeholder, count: count)
     }
 }
