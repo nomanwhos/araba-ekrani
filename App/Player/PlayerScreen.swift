@@ -29,6 +29,9 @@ struct PlayerScreen: View {
                     .lineLimit(1)
                 Spacer(minLength: 0)
 
+                AirPlayButton()
+                    .frame(width: Theme.Size.tapMin, height: Theme.Size.tapMin)
+
                 Button {
                     controller.fillsScreen.toggle()
                 } label: {

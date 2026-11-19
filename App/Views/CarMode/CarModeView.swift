@@ -86,6 +86,8 @@ struct CarModeView: View {
             .background(Theme.surface, in: Capsule())
             Spacer(minLength: 0)
 
+            AirPlayButton()
+                .frame(width: Theme.Size.tapMin, height: Theme.Size.tapMin)
             MiniNowPlaying()
         }
         .padding(.horizontal, Theme.Space.s16)

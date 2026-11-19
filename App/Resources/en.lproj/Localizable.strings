@@ -153,6 +153,7 @@
 "Sunucuya ulaşılamadı. Adresi, portu ve internet bağlantınızı kontrol edin." = "Couldn't reach the server. Check the address, the port and your internet connection.";
 "Sürüm" = "Version";
 "Sığdır" = "Fit";
+"TV'ye gönder (AirPlay)" = "Send to TV (AirPlay)";
 "Tamam" = "Done";
 "Tarayıcı" = "Browser";
 "Tekrar dene" = "Try again";

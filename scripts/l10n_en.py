@@ -202,4 +202,6 @@ EN = {
     'Bu ekrana gönderin': 'Send to this screen',
     "Alıcı açıkken aynı Wi-Fi'deki uygulamaların ve bilgisayarların Gönder listesinde “Torpido (iPhone)” görünür. Gelen video burada tam ekran açılır.": 'While the receiver is on, “Torpido (iPhone)” appears in the Cast list of apps and computers on the same Wi-Fi. Videos sent to it open here full screen.',
     'Bir kanalın yıldızına dokunun; burada büyük gösterilir.': "Tap a channel's star; it shows here in large.",
+    # AirPlay
+    "TV'ye gönder (AirPlay)": 'Send to TV (AirPlay)',
 }
